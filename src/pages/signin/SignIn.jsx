@@ -1,10 +1,11 @@
 // src/SignInPage.js
 
-import  { useState } from 'react';
+// import  { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const SignInPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,47 +34,45 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center text-gray-900">Sign In</h2>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black via-black to-gray-900 text-white">
+      <header className="w-full p-6">
+        <nav className="flex items-center justify-between">
+          <div className="text-xl font-bold">ProFolioElite</div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="block w-full px-3 py-2 mt-1 text-gray-900 placeholder-gray-500 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            <Link to="/" className="px-4 py-2 text-sm font-bold text-black bg-purple-500 rounded-lg hover:bg-purple-600">Home</Link>
+          </div>
+        </nav>
+      </header>
+      <main className="flex flex-col items-center justify-center flex-1 w-full px-4 text-center">
+        <h1 className="text-4xl font-bold mb-8">Sign In to ProFolioElite</h1>
+        <form className="w-full max-w-sm">
+          <div className="mb-4">
+            <input 
+              className="w-full px-3 py-2 text-black rounded-lg" 
+              type="email" 
+              placeholder="Email" 
+              required 
             />
           </div>
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="block w-full px-3 py-2 mt-1 text-gray-900 placeholder-gray-500 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          <div className="mb-4">
+            <input 
+              className="w-full px-3 py-2 text-black rounded-lg" 
+              type="password" 
+              placeholder="Password" 
+              required 
             />
           </div>
-          <button
-            type="submit"
-            className="block w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          <button 
+            type="submit" 
+            className="w-full px-4 py-2 font-bold text-black bg-purple-500 rounded-lg hover:bg-purple-600"
           >
             Sign In
           </button>
         </form>
-      </div>
+        <p className="mt-4">{`Don't have an account?`} <Link to="/signup" className="text-purple-500 hover:underline">Sign Up</Link></p>
+      </main>
     </div>
+
   );
 };
 
