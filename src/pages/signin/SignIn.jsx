@@ -45,7 +45,7 @@ const SignInPage = () => {
       </header>
       <main className="flex flex-col items-center justify-center flex-1 w-full px-4 text-center">
         <h1 className="text-4xl font-bold mb-8">Sign In to ProFolioElite</h1>
-        <form className="w-full max-w-sm">
+        <form className="w-full max-w-sm" onSubmit={handleSubmit}>
           <div className="mb-4">
             <input 
               className="w-full px-3 py-2 text-black rounded-lg" 

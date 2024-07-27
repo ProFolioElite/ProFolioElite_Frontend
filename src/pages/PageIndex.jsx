@@ -3,10 +3,10 @@ import SignupPage from "./signup/SignUp";
 import SignInPage from "./signin/SignIn";
 import TemplatesPage from "./templete/Templete";
 import ProfessionSelectionPage from './selectprofession/ProfessionSelectionPage'
-import { BrowserRouter as Router, Route, Routes, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes,  } from "react-router-dom";
 
 const PageIndex = () => {
-    const location = useParams();
+    // const location = useParams();
     // console.log(location());
   return (
     <>

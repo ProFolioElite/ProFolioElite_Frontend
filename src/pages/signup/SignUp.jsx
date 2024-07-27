@@ -1,12 +1,12 @@
 // src/SignupPage.js
 
-import  { useState } from 'react';
+// import  { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const SignupPage = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const [username, setUsername] = useState('');
+  // const [email, setEmail] = useState('');
+  // const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,7 +46,7 @@ const SignupPage = () => {
     </header>
     <main className="flex flex-col items-center justify-center flex-1 w-full px-4 text-center">
       <h1 className="text-4xl font-bold mb-8">Sign Up for ProFolioElite</h1>
-      <form className="w-full max-w-sm">
+      <form className="w-full max-w-sm" onSubmit={handleSubmit}>
         <div className="mb-4">
           <input 
             className="w-full px-3 py-2 text-black rounded-lg" 
