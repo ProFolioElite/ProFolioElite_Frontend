@@ -2,6 +2,8 @@
 
 // import { Link } from "react-router-dom";
 // import { ReactComponent as Logo }  from '../../assets/logo.svg'
+import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
+import Features from "./Feature";
 
 const LandingPage = () => {
   const testimonials = [
@@ -30,7 +32,13 @@ const LandingPage = () => {
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black via-black to-gray-900 text-white">
         <header className="sticky top-0 w-full p-6">
           <nav className="flex items-center justify-between">
-            <div className="text-xl font-bold">ProFolioElite</div>
+            <div className="text-xl font-bold">
+            {/* <div className="mb-4 md:mb-0"> */}
+              <a href="/" className="m-2 text-2xl font-bold">
+                {`{(</>)}`}
+              </a>
+            {/* </div> */}
+            ProFolioElite</div>
             <div>
               <a
                 href="/signup"
@@ -104,7 +112,7 @@ const LandingPage = () => {
             </div>
           </div>
         </section>
-        <section className="flex flex-col items-center justify-center min-h-screen py-20 bg-gradient-to-b from-gray-900 to-black text-white">
+        {/* <section className="flex flex-col items-center justify-center min-h-screen py-20 bg-gradient-to-b from-gray-900 to-black text-white">
           <h2 className="mb-8 text-4xl font-bold text-center">
             What Our Users Say
           </h2>
@@ -127,7 +135,92 @@ const LandingPage = () => {
               </div>
             ))}
           </div>
+        </section> */}
+        <section>
+          <Features />
         </section>
+        <section className="flex flex-col items-center justify-center min-h-screen py-20 bg-gradient-to-b from-gray-900 to-black text-white">
+          <h2 className="mb-8 text-4xl font-bold text-center">
+            What Our Users Say
+          </h2>
+          <div className="flex flex-col items-center justify-center w-full space-y-8 md:flex-row md:space-y-0 md:space-x-8">
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={index}
+                className="relative flex flex-col items-center justify-center p-6 text-center bg-gray-800 rounded-lg shadow-lg group hover:shadow-xl transition-shadow duration-300 ease-in-out"
+              >
+                <img
+                  src={testimonial.image}
+                  alt={testimonial.name}
+                  className="w-24 h-24 mb-4 rounded-full border-4 border-transparent group-hover:border-purple-500 transition-colors duration-300 ease-in-out"
+                />
+                <h3 className="text-2xl font-bold group-hover:text-purple-500 transition-colors duration-300 ease-in-out">
+                  {testimonial.name}
+                </h3>
+                <p className="mt-2 text-sm font-semibold text-gray-400">
+                  {testimonial.title}
+                </p>
+                <p className="mt-4 text-lg">{testimonial.text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <footer className="bg-gray-900 text-white py-8">
+          <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-4 md:mb-0">
+              <a href="/" className="m-4 text-3xl font-bold">
+                {`{(</>)}`}
+              </a>
+            </div>
+            <div className="flex space-x-4 mb-4 md:mb-0">
+              <a
+                href="#features"
+                className="text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                Features
+              </a>
+              <a
+                href="#pricing"
+                className="text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                Pricing
+              </a>
+              <a
+                href="#about"
+                className="text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                About
+              </a>
+              <a
+                href="#contact"
+                className="text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                Contact
+              </a>
+            </div>
+            <div className="flex space-x-4 ml-4">
+              <a
+                href="https://twitter.com"
+                className="text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <FaTwitter size={24} />
+              </a>
+              <a
+                href="https://linkedin.com"
+                className="text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <FaLinkedin size={24} />
+              </a>
+              <a
+                href="https://github.com"
+                className="text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <FaGithub size={24} />
+              </a>
+            </div>
+          </div>
+        </footer>
       </div>
     </>
   );
