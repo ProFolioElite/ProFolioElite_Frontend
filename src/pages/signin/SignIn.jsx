@@ -1,14 +1,30 @@
 // src/SignInPage.js
 
 // import  { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { loginUser } from '../../features/user/userSlice';
+import { useState } from 'react';
 
 const SignInPage = () => {
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  console.log(user);
 
-  const handleSubmit = async (e) => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  console.log(formData);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(loginUser(formData));
+  };
+
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
 
     // const user = { email, password };
 
@@ -31,7 +47,7 @@ const SignInPage = () => {
     // } catch (error) {
     //   console.error('Error:', error);
     // }
-  };
+  // };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black via-black to-gray-900 text-white">
@@ -51,6 +67,8 @@ const SignInPage = () => {
               className="w-full px-3 py-2 text-black rounded-lg" 
               type="email" 
               placeholder="Email" 
+              name='email'
+              onChange={handleChange}
               required 
             />
           </div>
@@ -58,7 +76,9 @@ const SignInPage = () => {
             <input 
               className="w-full px-3 py-2 text-black rounded-lg" 
               type="password" 
-              placeholder="Password" 
+              placeholder="Password"
+              name='password'
+              onChange={handleChange} 
               required 
             />
           </div>
