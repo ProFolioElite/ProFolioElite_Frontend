@@ -28,10 +28,14 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    logout(state) {
-      state.user = null;
-      localStorage.removeItem('token');
-    },
+    setProfession(state, action) {
+        state.profession = action.payload;
+      },
+      logout(state) {
+        state.user = null;
+        localStorage.removeItem('token');
+      },
+  
   },
   extraReducers: (builder) => {
     builder
@@ -62,6 +66,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout,setProfession } = userSlice.actions;
 
 export default userSlice.reducer;

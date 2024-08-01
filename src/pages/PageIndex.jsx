@@ -3,6 +3,7 @@ import SignupPage from "./signup/SignUp";
 import SignInPage from "./signin/SignIn";
 import TemplatesPage from "./templete/Templete";
 import ProfessionSelectionPage from './selectprofession/ProfessionSelectionPage'
+import MultiStepForm from "../component/MultiStepForm";
 import { BrowserRouter as Router, Route, Routes,  } from "react-router-dom";
 
 const PageIndex = () => {
@@ -16,7 +17,9 @@ const PageIndex = () => {
           <Route path="/signup" element={<SignupPage/>}/>
           <Route path="/signin" element={<SignInPage/>}/>
           <Route path="/selectprofession" element={<ProfessionSelectionPage/>}/>
-          <Route path="/templete" element={<TemplatesPage/>}/>
+          <Route path="/templates" element={<TemplatesPage/>}/>
+
+          <Route path="/userdestails" element={<MultiStepForm/>}/>
         </Routes>
       </Router>
     </>

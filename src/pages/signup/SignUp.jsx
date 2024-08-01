@@ -17,7 +17,7 @@ const SignupPage = () => {
   const user = useSelector((state) => state.user);
 
   const [isRegister, setRegister] = useState({});
-  const [showmodal,setShowModal]= useState(false)
+  const [showmodal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   // const [status]
@@ -29,13 +29,15 @@ const SignupPage = () => {
     }
   };
 
-  useEffect(()=>{if(user.status==="succeeded"){
-    setShowModal(true)
-  }},[user.status])
+  useEffect(() => {
+    if (user.status === "succeeded") {
+      setShowModal(true);
+    }
+  }, [user.status]);
 
-  const hadleClose =()=>{
-    setShowModal(false)
-  } 
+  const hadleClose = () => {
+    setShowModal(false);
+  };
 
   // {user?token?Navigate({to:'/signin'})}
   // console.log(user);
@@ -54,7 +56,12 @@ const SignupPage = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black via-black to-gray-900 text-white">
       <header className=" sticky top-0 w-full p-6">
         <nav className="flex items-center justify-between">
-          <div className="text-xl font-bold">ProFolioElite</div>
+          <div className="text-xl font-bold">
+            <a href="/" className="m-2 text-2xl font-bold">
+              {`{(</>)}`}
+            </a>
+            ProFolioElite
+          </div>
           <div>
             <Link
               to="/"
@@ -109,6 +116,25 @@ const SignupPage = () => {
               required
             />
           </div>
+          <div className="mb-4">
+            <select
+              className="w-full px-3 py-2 text-black rounded-lg"
+              onSelect={handleChange}
+            >
+              <option>Please choose your proffesion</option>
+
+              <option name="frontendDeveloper">Frontend Developer</option>
+              <option name="backendDeveloper">Backend Developer</option>
+              <option name="fullStackDeveloper">Full Stack Developer</option>
+              <option name="fullStackAiMlDeveloper">
+                Full Stack AI/ML Developer
+              </option>
+              <option name="blockChainDeveloper">Blockchain Developer</option>
+              <option name="fullStackBlockChainDeveloper">
+                Full Stack BlockChain Developer
+              </option>
+            </select>
+          </div>
           <button
             type="submit"
             className="w-full px-4 py-2 font-bold text-black bg-purple-500 rounded-lg hover:bg-purple-600"
@@ -118,7 +144,7 @@ const SignupPage = () => {
         </form>
         <SuccessModal
           show={showmodal}
-          message={"You are register succesfull now you can sign in "} 
+          message={"You are register succesfull now you can sign in "}
           onClose={hadleClose}
         />
         <p className="mt-4">

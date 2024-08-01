@@ -1,35 +1,51 @@
-// src/TemplatesPage.js
+// src/components/TemplatePage.js
 
-// import  from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+// import { fetchTemplates } from '../../features/user/userSlice';
 
-const TemplatesPage = () => {
-  const { profession } = useParams();
-  console.log(profession);
+const TemplatePage = () => {
+  const dispatch = useDispatch();
+  const { profession, templates, status, error } = useSelector((state) => state.user);
 
-  const templates = {
-    developer: ['Developer Template 1', 'Developer Template 2'],
-    designer: ['Designer Template 1', 'Designer Template 2'],
-    writer: ['Writer Template 1', 'Writer Template 2'],
-    photographer: ['Photographer Template 1', 'Photographer Template 2'],
-    // Add more templates for other professions
-  };
+  useEffect(() => {
+    if (profession) {
+      // dispatch(fetchTemplates(profession));
+    }
+  }, [profession, dispatch]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h2 className="text-3xl font-bold text-center text-gray-900">
-        Templates for
-         {/* {profession.charAt(0).toUpperCase() + profession.slice(1)} */}
+    <div className="min-h-screen py-20 bg-gray-100">
+      <h2 className="text-4xl font-bold text-center mb-8">
+        Templates for {profession}
       </h2>
-      <div className="mt-8 space-y-6">
-        {/* {templates[profession]?.map((template, index) => (
-          <div key={index} className="p-4 bg-white rounded-lg shadow-md">
-            {template}
-          </div>
-        ))} */}
-      </div>
+      {status === 'loading' && <p>Loading templates...</p>}
+      {status === 'failed' && <p>Error: {error}</p>}
+      {status === 'succeeded' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {templates.map((template, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+            >
+              <img
+                src={template.image}
+                alt={template.name}
+                className="w-full h-48 object-cover rounded-t-lg"
+              />
+              <div className="p-4">
+                <h3 className="text-2xl font-bold">{template.name}</h3>
+                <p className="mt-2 text-gray-600">{template.description}</p>
+                <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                  Choose Template
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
-export default TemplatesPage;
+export default TemplatePage;
