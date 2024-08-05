@@ -5,6 +5,7 @@ import TemplatesPage from "./templete/Templete";
 import ProfessionSelectionPage from './selectprofession/ProfessionSelectionPage'
 import MultiStepForm from "../component/MultiStepForm";
 import { BrowserRouter as Router, Route, Routes,  } from "react-router-dom";
+import Templete from "../templete/softwareEngineer/templete1/Templete";
 
 const PageIndex = () => {
     // const location = useParams();
@@ -20,6 +21,7 @@ const PageIndex = () => {
           <Route path="/templates" element={<TemplatesPage/>}/>
 
           <Route path="/userdestails" element={<MultiStepForm/>}/>
+          <Route path="/prof/temp" element={<Templete/>}/>
         </Routes>
       </Router>
     </>
