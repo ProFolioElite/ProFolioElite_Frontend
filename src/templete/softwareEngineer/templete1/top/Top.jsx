@@ -3,19 +3,21 @@ import ProfileImage from "./ProfileImage";
 import IntroText from "./IntroText";
 import HireButton from "./HireButton";
 
-function Top() {
+function Top({ professionTitle, aboutDetails, ProfilePic }) {
   return (
     <main className="flex flex-row gap-5 items-center self-center mt-16 text-lg max-md:mt-10 max-md:max-w-full">
-      <section className="flex  flex-row self-stretch my-auto min-w-[240px] w-[553px]  max-md:max-w-full">
-        <div >
-          <IntroText />
+      <section className="flex flex-row  gap-5 items-center self-center mt-20 max-md:mt-10 max-md:max-w-full">
+        <div>
+          <IntroText
+            professionTitle={professionTitle ? professionTitle : null}
+            aboutDetails={aboutDetails ? aboutDetails : null}
+          />
           <HireButton />
         </div>
         <div>
-        <ProfileImage />
-      
+          <ProfileImage ProfilePic={ProfilePic ? ProfilePic : null} />
         </div>
-        </section>
+      </section>
     </main>
   );
 }

@@ -24,7 +24,7 @@ const skillsData = [
   },
 ];
 
-function SkillsSection() {
+function SkillsSection({skilDetails}) {
   return (
     <section className="flex flex-col items-center  self-center align-middle  w-full min-h-[444px] max-md:px-5 max-md:py-24 max-md:mt-10 max-md:max-w-full ">
       <div>
@@ -35,7 +35,15 @@ function SkillsSection() {
               I have a vast experience in the following web technologies:
             </p>
             <div className="flex flex-wrap gap-5 items-start mt-10 text-base text-center text-black max-md:max-w-full">
-              {skillsData.map((skill, index) => (
+              {skilDetails?skilDetails.map((index,skill)=>{
+                return(
+                    <SkillCard
+                    key={index}
+                    imageSrc={skill.imageSrc}
+                    skillName={skill.skillName}
+                  />    
+                )
+              }):skillsData.map((skill, index) => (
                 <SkillCard
                   key={index}
                   imageSrc={skill.imageSrc}

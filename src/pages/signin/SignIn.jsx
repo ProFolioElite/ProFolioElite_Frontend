@@ -1,53 +1,41 @@
 // src/SignInPage.js
 
-// import  { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { loginUser } from "../../features/user/userSlice";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser, getUser } from "../../features/user/userSlice";
+import { useEffect, useState } from "react";
 
 const SignInPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-  console.log(user);
+  // const userDetails = useSelector((state) => state.user);
 
+  const { token } = user?.user || {}; // Destructure token directly from user state
+  const { _id } = user?.user || {}; // Destructure token directly from user state
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   console.log(formData);
+  console.log(_id);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(loginUser(formData));
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  // const user = { email, password };
-
-  // try {
-  //   const response = await fetch('http://localhost:5000/api/auth/login', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(user),
-  //   });
-
-  //   if (response.ok) {
-  //     // Handle successful login (e.g., redirect to dashboard)
-  //     console.log('User signed in successfully!');
-  //   } else {
-  //     // Handle errors (e.g., display error message)
-  //     console.error('Sign-in failed.');
-  //   }
-  // } catch (error) {
-  //   console.error('Error:', error);
-  // }
-  // };
-
+  // Use useEffect to navigate when the token is available
+  useEffect(() => {
+    if (token) {
+      // Fetch user data with the token
+      dispatch(getUser(token));
+    }
+  }, [token, dispatch]);
+  if (_id) {
+    navigate(`/${_id}/userDetails`);
+  }
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black via-black to-gray-900 text-white">
       <header className="w-full p-6">

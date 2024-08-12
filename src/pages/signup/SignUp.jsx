@@ -107,7 +107,7 @@ const SignupPage = () => {
             <input
               className="w-full px-3 py-2 text-black rounded-lg"
               type="password"
-              name="Password"
+              name="password"
               placeholder="Password"
               // value
               onChange={(e) => {

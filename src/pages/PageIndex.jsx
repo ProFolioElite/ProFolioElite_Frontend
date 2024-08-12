@@ -20,7 +20,7 @@ const PageIndex = () => {
           <Route path="/selectprofession" element={<ProfessionSelectionPage/>}/>
           <Route path="/templates" element={<TemplatesPage/>}/>
 
-          <Route path="/userdestails" element={<MultiStepForm/>}/>
+          <Route path="/:id/userdetails" element={<MultiStepForm/>}/>
           <Route path="/prof/temp" element={<Templete/>}/>
         </Routes>
       </Router>

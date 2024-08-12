@@ -6,15 +6,38 @@ import SkillsSection from "./skillSection/SkillSection";
 import SocialMediaSection from "./socialMediaSection/SocialMediaSection";
 import Top from "./top/Top";
 
-const Templete = () => {
+const Templete = ({
+  profilePhoto,
+  name,
+  email,
+  phone,
+  about,
+  profession,
+  skills,
+  experienceLevel,
+  workExperience,
+  openSourceContribution,
+  projects,
+  socialMediaLinks,
+  navigationItems,
+}) => {
   return (
     <>
-      <Header />
-      <Top />
-      <SkillsSection />
-      <ProjectsSection />
+      <Header
+        navigationItems={navigationItems ? navigationItems : null}
+        logo={profilePhoto ? profilePhoto : null}
+      />
+      <Top
+        professionTitle={profession ? profession : null}
+        ProfilePic={profilePhoto ? profilePhoto : null}
+        aboutDetails={about ? about : null}
+      />
+      <SkillsSection skilDetails={skills ? skills : null} />
+      <ProjectsSection projectDetails={projects ? projects : null} />
       <ContactForm />
-      <SocialMediaSection />
+      <SocialMediaSection
+        socialMedialDetials={socialMediaLinks ? socialMediaLinks : null}
+      />
     </>
   );
 };
