@@ -1,0 +1,24 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 300 100"
+    width="300"
+    height="100"
+>
+    <style>
+        .background {
+            fill: #282c34;
+        }
+        .text {
+            font-family: 'Courier New', monospace;
+            font-size: 50px;
+            fill: #61dafb;
+        }
+        .brackets {
+            fill: #ffffff;
+        }
+    </style>
+    <rect class="background" width="300" height="100" rx="15" />
+    <text x="10" y="65" class="brackets">{(</text>
+    <text x="80" y="65" class="text">/</text>
+    <text x="120" y="65" class="brackets">)}</text>
+</svg>

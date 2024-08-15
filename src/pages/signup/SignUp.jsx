@@ -1,6 +1,5 @@
 // src/SignupPage.js
 
-// import  { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../../features/user/userSlice";
@@ -14,53 +13,44 @@ const SignupPage = () => {
     password: "",
     profession: "",
   });
+
   const user = useSelector((state) => state.user);
-
-  const [isRegister, setRegister] = useState({});
-  const [showmodal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-
-  // const [status]
   const dispatch = useDispatch();
-  const handleToNavigate = () => {
-    setRegister(user);
-    if (isRegister) {
-      navigate("/signin");
-    }
-  };
 
   useEffect(() => {
     if (user.status === "succeeded") {
       setShowModal(true);
+      setTimeout(() => {
+        navigate("/signin"); // Navigate to sign-in after showing the modal
+      }, 2000); // Optional: Delay before navigating
     }
-  }, [user.status]);
+  }, [user.status, navigate]);
 
-  const hadleClose = () => {
+  const handleClose = () => {
     setShowModal(false);
   };
 
-  // {user?token?Navigate({to:'/signin'})}
-  // console.log(user);
-
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(registerUser(formData));
   };
-  console.log(formData);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black via-black to-gray-900 text-white">
-      <header className=" sticky top-0 w-full p-6">
+      <header className="sticky top-0 w-full p-6">
         <nav className="flex items-center justify-between">
           <div className="text-xl font-bold">
             <a href="/" className="m-2 text-2xl font-bold">
               {`{(</>)}`}
             </a>
-            ProFolioElite
+            
           </div>
           <div>
             <Link
@@ -74,22 +64,14 @@ const SignupPage = () => {
       </header>
       <main className="flex flex-col items-center justify-center flex-1 w-full px-4 text-center">
         <h1 className="text-4xl font-bold mb-8">Sign Up for ProFolioElite</h1>
-        <form
-          className="w-full max-w-sm"
-          onSubmit={(e) => {
-            handleSubmit(e);
-            // handleToNavigate();
-          }}
-        >
+        <form className="w-full max-w-sm" onSubmit={handleSubmit}>
           <div className="mb-4">
             <input
               className="w-full px-3 py-2 text-black rounded-lg"
               type="text"
               name="name"
               placeholder="Full Name"
-              onChange={(e) => {
-                handleChange(e);
-              }}
+              onChange={handleChange}
               required
             />
           </div>
@@ -109,29 +91,27 @@ const SignupPage = () => {
               type="password"
               name="password"
               placeholder="Password"
-              // value
-              onChange={(e) => {
-                handleChange(e);
-              }}
+              onChange={handleChange}
               required
             />
           </div>
           <div className="mb-4">
             <select
               className="w-full px-3 py-2 text-black rounded-lg"
-              onSelect={handleChange}
+              name="profession" // Set name for select element
+              onChange={handleChange}
+              required
             >
-              <option>Please choose your proffesion</option>
-
-              <option name="frontendDeveloper">Frontend Developer</option>
-              <option name="backendDeveloper">Backend Developer</option>
-              <option name="fullStackDeveloper">Full Stack Developer</option>
-              <option name="fullStackAiMlDeveloper">
+              <option value="">Please choose your profession</option>
+              <option value="frontendDeveloper">Frontend Developer</option>
+              <option value="backendDeveloper">Backend Developer</option>
+              <option value="fullStackDeveloper">Full Stack Developer</option>
+              <option value="fullStackAiMlDeveloper">
                 Full Stack AI/ML Developer
               </option>
-              <option name="blockChainDeveloper">Blockchain Developer</option>
-              <option name="fullStackBlockChainDeveloper">
-                Full Stack BlockChain Developer
+              <option value="blockChainDeveloper">Blockchain Developer</option>
+              <option value="fullStackBlockChainDeveloper">
+                Full Stack Blockchain Developer
               </option>
             </select>
           </div>
@@ -143,9 +123,9 @@ const SignupPage = () => {
           </button>
         </form>
         <SuccessModal
-          show={showmodal}
-          message={"You are register succesfull now you can sign in "}
-          onClose={hadleClose}
+          show={showModal}
+          message={"You have successfully registered. You can now sign in."}
+          onClose={handleClose}
         />
         <p className="mt-4">
           Already have an account?{" "}

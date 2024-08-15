@@ -44,7 +44,7 @@ const SignInPage = () => {
             <a href="/" className="m-2 text-2xl font-bold">
               {`{(</>)}`}
             </a>
-            ProFolioElite
+            
           </div>
           <div>
             <Link

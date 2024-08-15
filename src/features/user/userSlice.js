@@ -10,15 +10,13 @@ const initialState = {
   status: "idle",
   error: null,
 };
+const baseUrl = "https://profolioelite-backend-1.onrender.com";
 
 // Async thunk for user registration
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (userData) => {
-    const response = await axios.post(
-      "http://localhost:5000/api/auth/register",
-      userData
-    );
+    const response = await axios.post(`${baseUrl}/api/auth/register`, userData);
     return response.data;
   }
 );
@@ -27,10 +25,7 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
   "user/loginUser",
   async (userData) => {
-    const response = await axios.post(
-      "http://localhost:5000/api/auth/login",
-      userData
-    );
+    const response = await axios.post(`${baseUrl}/api/auth/login`, userData);
     console.log(response);
     return response.data;
   }
@@ -39,10 +34,10 @@ export const loginUser = createAsyncThunk(
 export const getUser = createAsyncThunk("user/getUser", async (token) => {
   console.log(token);
 
-  const response = await axios.get("http://localhost:5000/api/auth/getUser", {
+  const response = await axios.get(`${baseUrl}/api/auth/getUser`, {
     headers: { "x-auth-token": token }, // Changed 'header' to 'headers'
   });
-  
+
   console.log(response);
   return response.data;
 });
@@ -80,7 +75,7 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.user = action.payload;
-        localStorage.setItem("token",action.payload.token );
+        localStorage.setItem("token", action.payload.token);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = "failed";

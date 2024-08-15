@@ -38,7 +38,7 @@ const LandingPage = () => {
                 {`{(</>)}`}
               </a>
             {/* </div> */}
-            ProFolioElite</div>
+            </div>
             <div>
               <a
                 href="/signup"

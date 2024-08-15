@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { FaUpload } from "react-icons/fa";
+import { useState } from "react";
+import {
+  FaUser,
+  FaBriefcase,
+  FaCode,
+  FaProjectDiagram,
+  FaLink,
+} from "react-icons/fa";
 
 const MultiStepForm = () => {
   const [formData, setFormData] = useState({
@@ -9,7 +15,7 @@ const MultiStepForm = () => {
     phone: "",
     about: "",
     profession: "",
-    skills: "",
+    skills: [""],
     experienceLevel: "",
     workExperience: [
       {
@@ -44,6 +50,16 @@ const MultiStepForm = () => {
       stackOverflow: "",
     },
   });
+
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const steps = [
+    { label: "Personal Details", icon: <FaUser /> },
+    { label: "Work Experience", icon: <FaBriefcase /> },
+    { label: "Open Source Contributions", icon: <FaCode /> },
+    { label: "Projects", icon: <FaProjectDiagram /> },
+    { label: "Social Media Links", icon: <FaLink /> },
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -132,365 +148,437 @@ const MultiStepForm = () => {
     // Handle form submission here
   };
 
+  const nextStep = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const prevStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
   return (
-    <div className="details-form min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-black to-gray-900 text-white">
-      <div className="w-full max-w-5xl bg-transparent text-white rounded-lg shadow-md p-8">
-        <h2 className="text-2xl font-bold mb-4">Personal Details</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block mb-2">Profile Photo</label>
-              <input
-                type="file"
-                name={<FaUpload />}
-                onChange={handleFileChange}
-                className="w-full p-2 border rounded"
-              />
-            </div>
-            <div>
+    <>
+      <h2 className="text-2xl font-bold mb-4">{steps[currentStep].label}</h2>
+      <div
+        className="flex items-center justify-center  overflow-y-scroll  scrollbar-hide text-white  bg-gray-800 rounded-lg shadow-lg"
+        style={{ height: "87vh" }}
+      >
+        <div
+          className="w-full  bg-transparent text-white rounded-lg shadow-md p-5"
+          style={{ height: "85vh" }}
+        >
+          <div className="flex mb-4">
+            {steps.map((step, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentStep(index)}
+                className={`flex flex-col items-center flex-1 py-2 text-center ${
+                  currentStep === index ? "bg-purple-600" : "bg-gray-700"
+                } text-white rounded mx-1`}
+              >
+                <div className="text-2xl mb-1">{step.icon}</div>
+                {/* <span className="text-sm">{step.label}</span> */}
+              </button>
+            ))}
+          </div>
+
+          <form onSubmit={handleSubmit} className="p-5">
+            {currentStep === 0 && (
+              <div className="mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block mb-2">Profile Photo</label>
+                    <input
+                      type="file"
+                      name="profilePhoto"
+                      onChange={handleFileChange}
+                      className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white "
+                    />
+                  </div>
+                  {/* Uncomment these fields if needed */}
+                  {/* <div>
               <label className="block mb-2">Name</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full p-2 border rounded  text-black"
-              />
-            </div>
-            <div>
-              <label className="block mb-2">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
                 className="w-full p-2 border rounded text-black"
               />
-            </div>
-            <div>
-              <label className="block mb-2">Phone</label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full p-2 border rounded  text-black"
-              />
-            </div>
-          </div>
+            </div> */}
+                  <div>
+                    <label className="block mb-2">Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2">Phone</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2">Experience Level</label>
+                    <input
+                      type="text"
+                      name="experienceLevel"
+                      value={formData.experienceLevel}
+                      onChange={handleChange}
+                      className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                    />
+                  </div>
+                </div>
 
-          <div className="mb-4">
-            <label className="block mb-2">About Yourself</label>
-            <textarea
-              name="about"
-              value={formData.about}
-              onChange={handleChange}
-              className="w-full p-2 border rounded  text-black"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2">Profession</label>
-            <input
-              type="text"
-              name="profession"
-              value={formData.profession}
-              onChange={handleChange}
-              className="w-full p-2 border rounded  text-black"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2">Skills</label>
-            <textarea
-              name="skills"
-              value={formData.skills}
-              onChange={handleChange}
-              className="w-full p-2 border rounded  text-black"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-2">Experience Level</label>
-            <input
-              type="text"
-              name="experienceLevel"
-              value={formData.experienceLevel}
-              onChange={handleChange}
-              className="w-full p-2 border rounded  text-black"
-            />
-          </div>
-
-          <div className="mb-4">
-            <h3 className="text-xl font-bold mb-2">Work Experience</h3>
-            {formData.workExperience.map((work, index) => (
-              <div key={index} className="mb-4 border p-4 rounded">
+                <div className="mb-4">
+                  <label className="block mb-2">About Yourself</label>
+                  <textarea
+                    name="about"
+                    value={formData.about}
+                    onChange={handleChange}
+                    className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-2">Skills</label>
+                  <textarea
+                    name="skills"
+                    value={formData.skills} // Join skills for display
+                    onChange={handleChange}
+                    className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                  />
+                </div>
+              </div>
+            )}
+            {currentStep === 1 && (
+              <div className="mb-4">
+                {/* <h3 className="text-xl font-bold mb-2">Work Experience</h3> */}
+                {formData.workExperience.map((work, index) => (
+                  <div
+                    key={index}
+                    className="mb-4 border p-4 rounded bg-gray-800"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block mb-2">Company Name</label>
+                        <input
+                          type="text"
+                          name="companyName"
+                          value={work.companyName}
+                          onChange={(e) => handleWorkExperienceChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2">Designation</label>
+                        <input
+                          type="text"
+                          name="designation"
+                          value={work.designation}
+                          onChange={(e) => handleWorkExperienceChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2">Project Worked On</label>
+                        <input
+                          type="text"
+                          name="projectWorkedOn"
+                          value={work.projectWorkedOn}
+                          onChange={(e) => handleWorkExperienceChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2">Project Brief</label>
+                        <textarea
+                          name="projectBrief"
+                          value={work.projectBrief}
+                          onChange={(e) => handleWorkExperienceChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2">Contribution</label>
+                        <textarea
+                          name="contribution"
+                          value={work.contribution}
+                          onChange={(e) => handleWorkExperienceChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2">Document</label>
+                        <input
+                          type="file"
+                          name="document"
+                          onChange={(e) => handleWorkExperienceChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={addWorkExperience}
+                  className="bg-purple-600 text-white py-2 px-4 rounded"
+                >
+                  Add Work Experience
+                </button>
+              </div>
+            )}
+            {currentStep === 2 && (
+              <div className="mb-4">
+                {/* <h3 className="text-xl font-bold mb-2">
+                Open Source Contributions
+              </h3> */}
+                {formData.openSourceContribution.map((contribution, index) => (
+                  <div
+                    key={index}
+                    className="mb-4 border p-4 rounded bg-gray-800"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block mb-2">Description</label>
+                        <textarea
+                          name="description"
+                          value={contribution.description}
+                          onChange={(e) => handleOpenSourceChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2">Skill Set</label>
+                        <input
+                          type="text"
+                          name="skillSet"
+                          value={contribution.skillSet}
+                          onChange={(e) => handleOpenSourceChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2">Link</label>
+                        <input
+                          type="url"
+                          name="link"
+                          value={contribution.link}
+                          onChange={(e) => handleOpenSourceChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={addOpenSourceContribution}
+                  className="mt-2 bg-purple-600 text-white py-2 px-4 rounded"
+                >
+                  Add Open Source Contribution
+                </button>
+              </div>
+            )}
+            {currentStep === 3 && (
+              <div className="mb-4">
+                {/* <h3 className="text-xl font-bold mb-2">Projects</h3> */}
+                {formData.projects.map((project, index) => (
+                  <div
+                    key={index}
+                    className="mb-4 border p-4 rounded bg-gray-800"
+                  >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block mb-2">Description</label>
+                        <textarea
+                          name="description"
+                          value={project.description}
+                          onChange={(e) => handleProjectsChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2">Skill Set</label>
+                        <input
+                          type="text"
+                          name="skillSet"
+                          value={project.skillSet}
+                          onChange={(e) => handleProjectsChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2">Repository Link</label>
+                        <input
+                          type="url"
+                          name="repoLink"
+                          value={project.repoLink}
+                          onChange={(e) => handleProjectsChange(index, e)}
+                          className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2">Live Link</label>
+                        <input
+                          type="url"
+                          name="liveLink"
+                          value={project.liveLink}
+                          onChange={(e) => handleProjectsChange(index, e)}
+                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={addProject}
+                  className="mt-2 bg-purple-600 text-white py-2 px-4 rounded"
+                >
+                  Add Project
+                </button>
+              </div>
+            )}
+            {currentStep === 4 && (
+              <div className="mb-4">
+                {/* <h3 className="text-xl font-bold mb-2">Social Media Links</h3> */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block mb-2">Company Name</label>
+                    <label className="block mb-2">LinkedIn</label>
                     <input
-                      type="text"
-                      name="companyName"
-                      value={work.companyName}
-                      onChange={(e) => handleWorkExperienceChange(index, e)}
-                      className="w-full p-2 border rounded mb-2  text-black"
+                      type="url"
+                      name="linkedIn"
+                      value={formData.socialMediaLinks.linkedIn}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          socialMediaLinks: {
+                            ...formData.socialMediaLinks,
+                            linkedIn: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
                     />
                   </div>
                   <div>
-                    <label className="block mb-2">Designation</label>
+                    <label className="block mb-2">Instagram</label>
                     <input
-                      type="text"
-                      name="designation"
-                      value={work.designation}
-                      onChange={(e) => handleWorkExperienceChange(index, e)}
-                      className="w-full p-2 border rounded mb-2  text-black"
+                      type="url"
+                      name="instagram"
+                      value={formData.socialMediaLinks.instagram}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          socialMediaLinks: {
+                            ...formData.socialMediaLinks,
+                            instagram: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
                     />
                   </div>
                   <div>
-                    <label className="block mb-2">Project Worked On</label>
+                    <label className="block mb-2">LeetCode</label>
                     <input
-                      type="text"
-                      name="projectWorkedOn"
-                      value={work.projectWorkedOn}
-                      onChange={(e) => handleWorkExperienceChange(index, e)}
-                      className="w-full p-2 border rounded mb-2  text-black"
+                      type="url"
+                      name="leetCode"
+                      value={formData.socialMediaLinks.leetCode}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          socialMediaLinks: {
+                            ...formData.socialMediaLinks,
+                            leetCode: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
                     />
                   </div>
                   <div>
-                    <label className="block mb-2">Project Brief</label>
-                    <textarea
-                      name="projectBrief"
-                      value={work.projectBrief}
-                      onChange={(e) => handleWorkExperienceChange(index, e)}
-                      className="w-full p-2 border rounded mb-2  text-black"
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2">Contribution</label>
-                    <textarea
-                      name="contribution"
-                      value={work.contribution}
-                      onChange={(e) => handleWorkExperienceChange(index, e)}
-                      className="w-full p-2 border rounded mb-2  text-black"
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2">
-                      Upload Document/Certificate
-                    </label>
+                    <label className="block mb-2">GitHub</label>
                     <input
-                      type="file"
-                      name="document"
-                      onChange={(e) => handleWorkExperienceChange(index, e)}
-                      className="w-full p-2 border rounded  text-black"
+                      type="url"
+                      name="github"
+                      value={formData.socialMediaLinks.github}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          socialMediaLinks: {
+                            ...formData.socialMediaLinks,
+                            github: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2">Stack Overflow</label>
+                    <input
+                      type="url"
+                      name="stackOverflow"
+                      value={formData.socialMediaLinks.stackOverflow}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          socialMediaLinks: {
+                            ...formData.socialMediaLinks,
+                            stackOverflow: e.target.value,
+                          },
+                        })
+                      }
+                      className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
                     />
                   </div>
                 </div>
               </div>
-            ))}
-            <button
-              type="button"
-              onClick={addWorkExperience}
-              className="w-full  bg-purple-500  hover:bg-purple-600 text-white p-2 rounded"
-            >
-              Add More Experience
-            </button>
-          </div>
-
-          <div className="mb-4">
-            <h3 className="text-xl font-bold mb-2">Open Source Contribution</h3>
-            {formData.openSourceContribution.map((contribution, index) => (
-              <div key={index} className="mb-4 border p-4 rounded">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block mb-2">Description</label>
-                    <textarea
-                      name="description"
-                      value={contribution.description}
-                      onChange={(e) => handleOpenSourceChange(index, e)}
-                      className="w-full p-2 border rounded mb-2  text-black"
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2">Skill Set</label>
-                    <input
-                      type="text"
-                      name="skillSet"
-                      value={contribution.skillSet}
-                      onChange={(e) => handleOpenSourceChange(index, e)}
-                      className="w-full p-2 border rounded mb-2  text-black"
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2">Link</label>
-                    <input
-                      type="url"
-                      name="link"
-                      value={contribution.link}
-                      onChange={(e) => handleOpenSourceChange(index, e)}
-                      className="w-full p-2 border rounded  text-black"
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={addOpenSourceContribution}
-              className="w-full  bg-purple-500  hover:bg-purple-600 text-white p-2 rounded"
-            >
-              Add More Contribution
-            </button>
-          </div>
-
-          <div className="mb-4">
-            <h3 className="text-xl font-bold mb-2">Projects</h3>
-            {formData.projects.map((project, index) => (
-              <div key={index} className="mb-4 border p-4 rounded">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block mb-2">Project Description</label>
-                    <textarea
-                      name="description"
-                      value={project.description}
-                      onChange={(e) => handleProjectsChange(index, e)}
-                      className="w-full p-2 border rounded mb-2  text-black"
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2">Skill Set Used</label>
-                    <input
-                      type="text"
-                      name="skillSet"
-                      value={project.skillSet}
-                      onChange={(e) => handleProjectsChange(index, e)}
-                      className="w-full p-2 border rounded mb-2  text-black"
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2">GitHub Link</label>
-                    <input
-                      type="url"
-                      name="repoLink"
-                      value={project.repoLink}
-                      onChange={(e) => handleProjectsChange(index, e)}
-                      className="w-full p-2 border rounded mb-2  text-black"
-                    />
-                  </div>
-                  <div>
-                    <label className="block mb-2">Live Link</label>
-                    <input
-                      type="url"
-                      name="liveLink"
-                      value={project.liveLink}
-                      onChange={(e) => handleProjectsChange(index, e)}
-                      className="w-full p-2 border rounded  text-black"
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={addProject}
-              className="w-full  bg-purple-500  hover:bg-purple-600 text-white p-2 rounded"
-            >
-              Add More Project
-            </button>
-          </div>
-
-          <div className="mb-4">
-            <label className="block mb-2">Social Media Links</label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                name="linkedIn"
-                value={formData.socialMediaLinks.linkedIn}
-                placeholder="LinkedIn"
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    socialMediaLinks: {
-                      ...formData.socialMediaLinks,
-                      linkedIn: e.target.value,
-                    },
-                  })
-                }
-                className="w-full p-2 border rounded mb-2  text-black"
-              />
-              <input
-                type="text"
-                name="instagram"
-                value={formData.socialMediaLinks.instagram}
-                placeholder="Instagram"
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    socialMediaLinks: {
-                      ...formData.socialMediaLinks,
-                      instagram: e.target.value,
-                    },
-                  })
-                }
-                className="w-full p-2 border rounded mb-2  text-black"
-              />
-              <input
-                type="text"
-                name="leetCode"
-                value={formData.socialMediaLinks.leetCode}
-                placeholder="LeetCode"
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    socialMediaLinks: {
-                      ...formData.socialMediaLinks,
-                      leetCode: e.target.value,
-                    },
-                  })
-                }
-                className="w-full p-2 border text-black rounded mb-2  text-black"
-              />
-              <input
-                type="text"
-                name="github"
-                value={formData.socialMediaLinks.github}
-                placeholder="GitHub"
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    socialMediaLinks: {
-                      ...formData.socialMediaLinks,
-                      github: e.target.value,
-                    },
-                  })
-                }
-                className="w-full p-2 border rounded mb-2"
-              />
-              <input
-                type="text"
-                name="stackOverflow"
-                value={formData.socialMediaLinks.stackOverflow}
-                placeholder="Stack Overflow"
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    socialMediaLinks: {
-                      ...formData.socialMediaLinks,
-                      stackOverflow: e.target.value,
-                    },
-                  })
-                }
-                className="w-full p-2 border rounded  text-black"
-              />
+            )}
+            <div className="flex justify-between mt-4">
+              <button
+                type="button"
+                onClick={prevStep}
+                disabled={currentStep === 0}
+                className="bg-gray-600 text-white py-2 px-4 rounded"
+              >
+                Previous
+              </button>
+              {currentStep < steps.length - 1 ? (
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  className="bg-purple-600 text-white py-2 px-4 rounded"
+                >
+                  Next
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="bg-green-600 text-white py-2 px-4 rounded"
+                >
+                  Submit
+                </button>
+              )}
             </div>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full  bg-purple-500  hover:bg-purple-600 text-white p-2 rounded"
-          >
-            Submit
-          </button>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
