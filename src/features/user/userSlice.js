@@ -42,6 +42,14 @@ export const getUser = createAsyncThunk("user/getUser", async (token) => {
   return response.data;
 });
 
+// logout
+export const logOut = createAsyncThunk("user/logout", async () => {
+  const response = await axios.get(`${baseUrl}/api/auth/logout`);
+
+  console.log(response);
+  return response.data;
+});
+
 // User slice
 const userSlice = createSlice({
   name: "user",
@@ -88,9 +96,23 @@ const userSlice = createSlice({
       .addCase(getUser.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.user = action.payload;
-        localStorage.setItem("userDetails", action.payload.data);
+        const userData = JSON.stringify(action.payload);
+        localStorage.setItem("userDetails", userData);
       })
       .addCase(getUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(logOut.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(logOut.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+        localStorage.setItem("userDetails", action.payload.data);
+      })
+      .addCase(logOut.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

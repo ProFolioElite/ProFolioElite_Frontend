@@ -1,20 +1,24 @@
 import { Suspense, lazy } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Spinner from "../component/Spinner";
-import Dashboard from "./dashboard/DashBoard";
+// import Dashboard from "./dashboard/DashBoard";
+import FrontendDeveloperT1 from "../templete/frontendDeveloper/t1/FrontendDeveloperT1";
+// import PrivateRoute from "../utils/PrivateRoute";
 
 // Lazy load your components
 const LandingPage = lazy(() => import("./landingPage/LandingPage"));
 const SignupPage = lazy(() => import("./signup/SignUp"));
 const SignInPage = lazy(() => import("./signin/SignIn"));
-const TemplatesPage = lazy(() => import("./templete/Templete"));
-const ProfessionSelectionPage = lazy(() =>
-  import("./selectprofession/ProfessionSelectionPage")
-);
-const MultiStepForm = lazy(() => import("../component/MultiStepForm"));
-const Templete = lazy(() =>
-  import("../templete/softwareEngineer/templete1/Templete")
-);
+const Dashboard = lazy(() => import("./dashboard/DashBoard"));
+const isAuthenticated = () => {
+  return !!localStorage.getItem("token");
+};
+
+// Wrapper component to protect routes
+const PrivateRoute = ({ children }) => {
+  return isAuthenticated() ? children : <Navigate to="/signin" replace />;
+};
+
 
 const PageIndex = () => {
   return (
@@ -30,15 +34,16 @@ const PageIndex = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/signin" element={<SignInPage />} />
+          {/* <Route path="/:id/dashboard/*" element={<Dashboard />} /> */}
+          <Route path="/t1" element={<FrontendDeveloperT1 />} />
           <Route
-            path="/selectprofession"
-            element={<ProfessionSelectionPage />}
+            path="/:id/dashboard/*"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
           />
-          <Route path="/templates" element={<TemplatesPage />} />
-          <Route path="/:id/userdetails" element={<MultiStepForm />} />
-          {/* <Route path="/prof/temp" element={<Templete />} /> */}
-          <Route path="/dashboard/*" element={<Dashboard />} />
-
         </Routes>
       </Suspense>
     </Router>

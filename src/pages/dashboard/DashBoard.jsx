@@ -1,18 +1,18 @@
 import { useReducer, useState, Suspense, lazy } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   FaChevronLeft,
   FaChevronRight,
+  FaFileAlt,
+  FaInfoCircle,
+  FaRocket,
   FaSignOutAlt,
   FaUser,
 } from "react-icons/fa";
-import {
-  FaHome,
-  FaProjectDiagram,
-  FaChartLine,
-  FaCog,
-  FaQuestionCircle,
-} from "react-icons/fa";
+import { FaCog, FaQuestionCircle } from "react-icons/fa";
 import Spinner from "../../component/Spinner";
+import { Navigate, useNavigate } from "react-router-dom";
+
 const PortfolioGallery = lazy(() =>
   import("../templeteGallery/Portfoliogallery")
 );
@@ -73,6 +73,7 @@ const handleToNavigate = (state, action) => {
         setting: (state.setting = false),
         help: (state.help = true),
       };
+
     default:
       return state;
   }
@@ -81,13 +82,21 @@ const handleToNavigate = (state, action) => {
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [state, dispatch] = useReducer(handleToNavigate, initialState);
+  const token = localStorage.getItem("userDetails");
+  const data = JSON.parse(token);
+
+  const navigation = useNavigate();
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
-  const user = {
-    name: "John Doe",
-    profession: "Web Developer",
+
+  const handleToLogout = () => {
+    console.log("it's click logout");
+
+    localStorage.setItem("token", "");
+    navigation('/signin')
+ 
   };
 
   return (
@@ -130,16 +139,11 @@ const Dashboard = () => {
                 <li
                   key={index}
                   className={`flex items-center py-2 px-4 text-white hover:bg-purple-500 transition-colors duration-300`}
+                  onClick={() => {
+                    dispatch({ type: item });
+                  }}
                 >
-                  {sidebarOpen && (
-                    <span className="mr-2">{/* Add your icon here */}</span>
-                  )}
-                  <span
-                    className={`${sidebarOpen ? "block" : "hidden"}`}
-                    onClick={() => {
-                      dispatch({ type: item });
-                    }}
-                  >
+                  <span className={`${sidebarOpen ? "block" : "hidden"}`}>
                     {item}
                   </span>
                 </li>
@@ -148,20 +152,20 @@ const Dashboard = () => {
           ) : (
             <ul>
               {[
-                <FaHome size={`30px`} />,
-                <FaProjectDiagram size={`30px`} />,
-                <FaChartLine size={`30px`} />,
-                <FaCog size={`30px`} />,
-                <FaQuestionCircle size={`30px`} />,
+                { name: "Templetes", icon: <FaFileAlt size={`30px`} /> },
+                { name: "Your Details", icon: <FaInfoCircle size={`30px`} /> },
+                { name: "Live PortFolio", icon: <FaRocket size={`30px`} /> },
+                { name: "Settings", icon: <FaCog size={`30px`} /> },
+                { name: "Help", icon: <FaQuestionCircle size={`30px`} /> },
               ].map((item, index) => (
                 <li
                   key={index}
                   className={`flex items-center py-2 px-6 text-white  hover:bg-purple-500 transition-colors duration-300`}
+                  onClick={() => {
+                    dispatch({ type: item.name });
+                  }}
                 >
-                  {sidebarOpen && (
-                    <span className="mr-2">{/* Add your icon here */}</span>
-                  )}
-                  <span>{item}</span>
+                  <span>{item.icon}</span>
                 </li>
               ))}
             </ul>
@@ -174,18 +178,18 @@ const Dashboard = () => {
             }`}
           >
             <div className="text-white">
-              <h2 className="text-lg font-bold">{user.name}</h2>
-              <p className="text-sm">{user.profession}</p>
+              <h2 className="text-lg font-bold">{data?.name.toUpperCase()}</h2>
+              <p className="text-sm">{data?.profession}</p>
             </div>
             <div className="text-white pt-2 mr-3 flex justify-around">
-              <FaSignOutAlt size={"30px"} />{" "}
+              <FaSignOutAlt onClick={handleToLogout} size={"30px"} />{" "}
             </div>
           </div>
         ) : (
           <div
             className={`flex items-center mt-52 py-2 px-6 text-white  hover:bg-purple-500 transition-colors duration-300`}
           >
-            <FaUser size={`30px`} />
+            <FaUser onClick={handleToLogout} size={`30px`} />
           </div>
         )}
       </aside>
@@ -195,6 +199,7 @@ const Dashboard = () => {
         <header>
           <h1 className="text-3xl font-semibold">
             {state.liveProject ? `Your Live Portfolio` : null}
+            {state.templete ? "Templetes" : null}
           </h1>
         </header>
         {/* <h2 className="text-2xl font-bold mb-4">{`Your Live Portfolio`}</h2> */}

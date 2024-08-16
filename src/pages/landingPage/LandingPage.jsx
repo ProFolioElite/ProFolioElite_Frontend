@@ -30,7 +30,7 @@ const LandingPage = () => {
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black via-black to-gray-900 text-white">
-        <header className="sticky top-0 w-full p-6">
+        <header className="sticky top-0 w-full  bg-gray-800 p-6 ">
           <nav className="flex items-center justify-between">
             <div className="text-xl font-bold">
             {/* <div className="mb-4 md:mb-0"> */}

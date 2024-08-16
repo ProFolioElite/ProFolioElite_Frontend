@@ -21,3 +21,20 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+.ovaerlap {
+  position: relative;
+  z-index: 2; /* Ensure content is above the canvas */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: aliceblue;
+}

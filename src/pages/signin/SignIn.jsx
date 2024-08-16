@@ -4,9 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser, getUser } from "../../features/user/userSlice";
 import { useEffect, useState } from "react";
+import Spinner from "../../component/Spinner";
 
 const SignInPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -23,6 +25,7 @@ const SignInPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     dispatch(loginUser(formData));
   };
 
@@ -31,10 +34,11 @@ const SignInPage = () => {
     if (token) {
       // Fetch user data with the token
       dispatch(getUser(token));
+      setLoading(false);
     }
   }, [token, dispatch]);
   if (_id) {
-    navigate(`/${_id}/userDetails`);
+    navigate(`/${_id}/dashboard`);
   }
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black via-black to-gray-900 text-white">
@@ -44,7 +48,6 @@ const SignInPage = () => {
             <a href="/" className="m-2 text-2xl font-bold">
               {`{(</>)}`}
             </a>
-            
           </div>
           <div>
             <Link
@@ -93,6 +96,7 @@ const SignInPage = () => {
           </Link>
         </p>
       </main>
+      {loading ? <Spinner /> : null}
     </div>
   );
 };
