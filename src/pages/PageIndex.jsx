@@ -15,12 +15,13 @@ const isAuthenticated = () => {
 };
 
 // Wrapper component to protect routes
-const PrivateRoute = ({ children }) => {
-  return isAuthenticated() ? children : <Navigate to="/signin" replace />;
-};
+
 
 
 const PageIndex = () => {
+  const PrivateRoute = ({ children }) => {
+    return isAuthenticated() ? children : <Navigate to="/signin" replace />;
+  };
   return (
     <Router>
       <Suspense

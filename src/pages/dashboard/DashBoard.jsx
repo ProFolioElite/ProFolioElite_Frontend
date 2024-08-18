@@ -16,7 +16,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 const PortfolioGallery = lazy(() =>
   import("../templeteGallery/Portfoliogallery")
 );
-const MultiStepForm = lazy(() => import("../../component/MultiStepForm"));
+const UserDetails = lazy(() => import("../userDetails/UserDetails"));
 const PortfolioPreview = lazy(() =>
   import("../portfolioPreview/PortfolioPreview")
 );
@@ -32,7 +32,7 @@ const initialState = {
 };
 const handleToNavigate = (state, action) => {
   switch (action.type) {
-    case "Templetes":
+    case "Templates":
       return {
         templete: (state.templete = true),
         yourDetails: (state.yourDetails = false),
@@ -95,8 +95,7 @@ const Dashboard = () => {
     console.log("it's click logout");
 
     localStorage.setItem("token", "");
-    navigation('/signin')
- 
+    navigation("/signin");
   };
 
   return (
@@ -130,7 +129,7 @@ const Dashboard = () => {
           {sidebarOpen ? (
             <ul>
               {[
-                "Templetes",
+                "Templates",
                 "Your Details",
                 "Live PortFolio",
                 "Settings",
@@ -152,7 +151,7 @@ const Dashboard = () => {
           ) : (
             <ul>
               {[
-                { name: "Templetes", icon: <FaFileAlt size={`30px`} /> },
+                { name: "Templates", icon: <FaFileAlt size={`30px`} /> },
                 { name: "Your Details", icon: <FaInfoCircle size={`30px`} /> },
                 { name: "Live PortFolio", icon: <FaRocket size={`30px`} /> },
                 { name: "Settings", icon: <FaCog size={`30px`} /> },
@@ -211,7 +210,7 @@ const Dashboard = () => {
           }
         >
           {state.templete ? <PortfolioGallery /> : null}
-          {state.yourDetails ? <MultiStepForm /> : null}
+          {state.yourDetails ? <UserDetails /> : null}
           {state.liveProject ? <PortfolioPreview /> : null}
           {state.setting ? <Setting /> : null}
           {state.help ? <Help /> : null}

@@ -6,7 +6,8 @@ import {
   FaProjectDiagram,
   FaLink,
 } from "react-icons/fa";
-
+import { useSelector,useDispatch } from "react-redux";
+import {inputUserDetialsInForm } from '../features/user/userSlice'
 const MultiStepForm = () => {
   const [formData, setFormData] = useState({
     profilePhoto: "",
@@ -52,6 +53,7 @@ const MultiStepForm = () => {
   });
 
   const [currentStep, setCurrentStep] = useState(0);
+  const dispatch = useDispatch();
 
   const steps = [
     { label: "Personal Details", icon: <FaUser /> },
@@ -144,7 +146,10 @@ const MultiStepForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
+    // localStorage.setItem("intputUserDetials", formData);
+    dispatch(inputUserDetialsInForm(formData))
+    
     // Handle form submission here
   };
 
@@ -196,11 +201,11 @@ const MultiStepForm = () => {
                       type="file"
                       name="profilePhoto"
                       onChange={handleFileChange}
-                      className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white "
+                      className="w-full p-1  border-gray-600 h-10 rounded bg-gray-700 text-white "
                     />
                   </div>
                   {/* Uncomment these fields if needed */}
-                  {/* <div>
+                  <div>
               <label className="block mb-2">Name</label>
               <input
                 type="text"
@@ -209,7 +214,7 @@ const MultiStepForm = () => {
                 onChange={handleChange}
                 className="w-full p-2 border rounded text-black"
               />
-            </div> */}
+            </div>
                   <div>
                     <label className="block mb-2">Email</label>
                     <input

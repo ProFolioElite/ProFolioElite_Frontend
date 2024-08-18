@@ -20,9 +20,6 @@ const SignInPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  console.log(formData);
-  console.log(_id);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -31,6 +28,7 @@ const SignInPage = () => {
 
   // Use useEffect to navigate when the token is available
   useEffect(() => {
+
     if (token) {
       // Fetch user data with the token
       dispatch(getUser(token));
@@ -40,6 +38,7 @@ const SignInPage = () => {
   if (_id) {
     navigate(`/${_id}/dashboard`);
   }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black via-black to-gray-900 text-white">
       <header className="w-full p-6">
@@ -86,7 +85,7 @@ const SignInPage = () => {
             type="submit"
             className="w-full px-4 py-2 font-bold text-black bg-purple-500 rounded-lg hover:bg-purple-600"
           >
-            Sign In
+            {loading?<Spinner/>:`Sign In`}
           </button>
         </form>
         <p className="mt-4">
@@ -95,8 +94,7 @@ const SignInPage = () => {
             Sign Up
           </Link>
         </p>
-      </main>
-      {loading ? <Spinner /> : null}
+      </main>{" "}
     </div>
   );
 };

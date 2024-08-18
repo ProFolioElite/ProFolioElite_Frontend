@@ -50,6 +50,27 @@ export const logOut = createAsyncThunk("user/logout", async () => {
   return response.data;
 });
 
+export const userDetails = createAsyncThunk(
+  "user/userDetails",
+  async ({token, inputuserDetails}) => {
+    console.log(inputuserDetails);
+    console.log(token);
+    
+    
+    const response = await axios.post(
+      `${baseUrl}/api/userDetails`,
+      inputuserDetails,
+      {
+        headers: { "x-auth-token": token },
+        // Changed 'header' to 'headers'
+      }
+    );
+
+    console.log(response);
+    return response.data;
+  }
+);
+
 // User slice
 const userSlice = createSlice({
   name: "user",
@@ -61,6 +82,9 @@ const userSlice = createSlice({
     logout(state) {
       state.user = null;
       localStorage.removeItem("token");
+    },
+    inputUserDetialsInForm(state, action) {
+      state.inputUserDetialsInForm = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -115,10 +139,24 @@ const userSlice = createSlice({
       .addCase(logOut.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(userDetails.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(userDetails.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+        localStorage.setItem("inputUserDetails", action.payload);
+      })
+      .addCase(userDetails.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
 
-export const { logout, setProfession } = userSlice.actions;
+export const { logout, setProfession, inputUserDetialsInForm } =
+  userSlice.actions;
 
 export default userSlice.reducer;
