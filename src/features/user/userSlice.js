@@ -42,6 +42,25 @@ export const getUser = createAsyncThunk("user/getUser", async (token) => {
   return response.data;
 });
 
+// /api/getuserdetails
+export const getuserdetails = createAsyncThunk(
+  "user/getuserdetails",
+  async ({ token, email }) => {
+    console.log(token);
+
+    const response = await axios.post(
+      `${baseUrl}/api/getuserdetails`,
+      {
+        headers: { "x-auth-token": token }, // Changed 'header' to 'headers'
+      },
+      email
+    );
+
+    console.log(response);
+    return response.data;
+  }
+);
+
 // logout
 export const logOut = createAsyncThunk("user/logout", async () => {
   const response = await axios.get(`${baseUrl}/api/auth/logout`);
@@ -52,11 +71,10 @@ export const logOut = createAsyncThunk("user/logout", async () => {
 
 export const userDetails = createAsyncThunk(
   "user/userDetails",
-  async ({token, inputuserDetails}) => {
+  async ({ token, inputuserDetails }) => {
     console.log(inputuserDetails);
     console.log(token);
-    
-    
+
     const response = await axios.post(
       `${baseUrl}/api/userDetails`,
       inputuserDetails,
@@ -152,11 +170,25 @@ const userSlice = createSlice({
       .addCase(userDetails.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      // getuserdetails
+      .addCase(getuserdetails.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(getuserdetails.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+        localStorage.setItem("getUserDetails", action.payload);
+      })
+      .addCase(getuserdetails.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
 
-export const { logout, setProfession, inputUserDetialsInForm } =
+export const { logout, setProfession, inputUserDetialsInForm, } =
   userSlice.actions;
 
 export default userSlice.reducer;

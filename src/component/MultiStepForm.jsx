@@ -6,8 +6,8 @@ import {
   FaProjectDiagram,
   FaLink,
 } from "react-icons/fa";
-import { useSelector,useDispatch } from "react-redux";
-import {inputUserDetialsInForm } from '../features/user/userSlice'
+import {  useDispatch } from "react-redux";
+import { inputUserDetialsInForm } from "../features/user/userSlice";
 const MultiStepForm = () => {
   const [formData, setFormData] = useState({
     profilePhoto: "",
@@ -148,8 +148,8 @@ const MultiStepForm = () => {
     e.preventDefault();
     // console.log(formData);
     // localStorage.setItem("intputUserDetials", formData);
-    dispatch(inputUserDetialsInForm(formData))
-    
+    dispatch(inputUserDetialsInForm(formData));
+
     // Handle form submission here
   };
 
@@ -206,15 +206,15 @@ const MultiStepForm = () => {
                   </div>
                   {/* Uncomment these fields if needed */}
                   <div>
-              <label className="block mb-2">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full p-2 border rounded text-black"
-              />
-            </div>
+                    <label className="block mb-2">Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded text-black"
+                    />
+                  </div>
                   <div>
                     <label className="block mb-2">Email</label>
                     <input
@@ -450,7 +450,7 @@ const MultiStepForm = () => {
                 ))}
                 <button
                   type="button"
-                  onClick={addProject}
+                  onClick={()=>{addProject()}}
                   className="mt-2 bg-purple-600 text-white py-2 px-4 rounded"
                 >
                   Add Project
