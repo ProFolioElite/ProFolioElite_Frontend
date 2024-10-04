@@ -22,26 +22,26 @@ const PortfolioGallery = () => {
       imageUrl: "https://via.placeholder.com/300",
       title: "Project 4",
     },
-    {
-      id: 1,
-      imageUrl: "https://via.placeholder.com/300", // Replace with your image URL
-      title: "Project 1",
-    },
-    {
-      id: 2,
-      imageUrl: "https://via.placeholder.com/300",
-      title: "Project 2",
-    },
-    {
-      id: 3,
-      imageUrl: "https://via.placeholder.com/300",
-      title: "Project 3",
-    },
-    {
-      id: 4,
-      imageUrl: "https://via.placeholder.com/300",
-      title: "Project 4",
-    },
+    // {
+    //   id: 5,
+    //   imageUrl: "https://via.placeholder.com/300", // Replace with your image URL
+    //   title: "Project 1",
+    // },
+    // {
+    //   id: 6,
+    //   imageUrl: "https://via.placeholder.com/300",
+    //   title: "Project 2",
+    // },
+    // {
+    //   id: 7,
+    //   imageUrl: "https://via.placeholder.com/300",
+    //   title: "Project 3",
+    // },
+    // {
+    //   id: 8,
+    //   imageUrl: "https://via.placeholder.com/300",
+    //   title: "Project 4",
+    // },
   ];
 
   return (

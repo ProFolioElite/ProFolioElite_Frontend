@@ -4,6 +4,7 @@
 // import { ReactComponent as Logo }  from '../../assets/logo.svg'
 import { FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
 import Features from "./Feature";
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   const testimonials = [
@@ -33,19 +34,25 @@ const LandingPage = () => {
         <header className="sticky top-0 w-full  bg-gray-800 p-6 ">
           <nav className="flex items-center justify-between">
             <div className="text-xl font-bold">
-            {/* <div className="mb-4 md:mb-0"> */}
+              {/* <div className="mb-4 md:mb-0"> */}
               <a href="/" className="m-2 text-2xl font-bold">
                 {`{(</>)}`}
               </a>
-            {/* </div> */}
+              {/* </div> */}
             </div>
             <div>
-              <a
-                href="/signup"
+              {/* <Link
+                to="/signup"
                 className="px-4 py-2 text-sm font-bold text-black bg-purple-500 rounded-lg hover:bg-purple-600"
               >
                 Get Started
-              </a>
+              </a> */}
+              <Link
+                to="/signup"
+                className="px-4 py-2 text-sm font-bold text-black bg-purple-500 rounded-lg hover:bg-purple-600"
+              >
+                Get Started
+              </Link>
             </div>
           </nav>
         </header>
@@ -67,12 +74,12 @@ const LandingPage = () => {
             effortlessly. <br /> Get noticed. Get hired.
           </p>
           <div className="mt-8">
-            <a
-              href="/signup"
+            <Link
+              to="/signup"
               className="px-8 py-3 text-lg font-bold text-black bg-purple-500 rounded-lg hover:bg-purple-600"
             >
               Get Started
-            </a>
+            </Link>
           </div>
         </main>
         <section className="relative m-20 flex items-center justify-center w-full h-screen ">
