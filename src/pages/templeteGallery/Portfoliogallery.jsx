@@ -13,16 +13,22 @@ const PortfolioGallery = () => {
       id: 1,
       imageUrl: Visionary, // Replace with your image URL
       title: "Visionary",
+      priview:
+        "https://www.figma.com/proto/SYnFPeYXNEAOTqrBuEI0ZC/Software-developer-portfolio-(Community)?node-id=401-3&node-type=canvas&t=18iNIaPqRaakfnSR-0&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=401%3A3",
     },
     {
       id: 2,
       imageUrl: Pioneer,
       title: "Pioneer",
+      priview:
+        "https://www.figma.com/proto/wYiv2EE4sat85d7sSr70bX/Geist---UI-Kit-for-Figma-(Community)?node-id=849-7780",
     },
     {
       id: 3,
       imageUrl: Catalyst,
       title: "Catalyst",
+      priview:
+        "https://www.figma.com/proto/ld5Sbh4Pa4ImmF5VGCyqCx/Portofolio-Website-Template-(Community)?node-id=813-219",
     },
     {
       id: 4,
@@ -40,11 +46,15 @@ const PortfolioGallery = () => {
       id: 6,
       imageUrl: Trailblazer,
       title: "Trailblazer",
+      priview:
+        "https://www.figma.com/proto/c2NqwbmDy76JF3EzjjDt6g/Portfolio-Template-%7C-Resume-Template-(Community)?node-id=2-447&node-type=frame&t=bXKQtohHmp6fubaj-0&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1",
     },
     {
       id: 7,
       imageUrl: Challenger,
       title: "Challenger",
+      priview:
+        "https://www.figma.com/proto/VlSR013Lsti33ToatkisqX/Wilson-Kinyua's-Portfolio-v2024-(Community)?node-id=1-2",
     },
     {
       id: 8,

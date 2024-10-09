@@ -38,7 +38,7 @@ const PageIndex = () => {
           <Route path="/signin" element={<SignInPage />} />
           {/* <Route path="/:id/dashboard/*" element={<Dashboard />} /> */}
           <Route path=":id/t1" element={<FrontendDeveloperT1 />} />
-          <Route path=":id/t2" element={<SoftwareTemplete />} />
+          <Route path="/:id/t2" element={<SoftwareTemplete />} />
 
           <Route
             path="/:id/dashboard/*"

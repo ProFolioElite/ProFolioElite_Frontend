@@ -13,7 +13,7 @@ const ImageCard = ({ imageUrl, title, priview }) => {
         <div className="p-4 flex justify-between align-middle">
           <h2 className="text-lg font-bold text-white">{title}</h2>
           <span className="flex pt-2">
-            <Link to={priview}>
+            <Link to={priview ? priview : null}>
               <FaEye />
             </Link>
           </span>

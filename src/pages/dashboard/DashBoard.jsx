@@ -1,5 +1,5 @@
 import { useReducer, useState, Suspense, lazy } from "react";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
 import {
   FaChevronLeft,
   FaChevronRight,
@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import { FaCog, FaQuestionCircle } from "react-icons/fa";
 import Spinner from "../../component/Spinner";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const PortfolioGallery = lazy(() =>
   import("../templeteGallery/Portfoliogallery")
