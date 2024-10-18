@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 const PortfolioGallery = lazy(() =>
   import("../templeteGallery/Portfoliogallery")
 );
+const Welcome = lazy(() => import("../welcomePage/Welcome"));
 const UserDetails = lazy(() => import("../userDetails/UserDetails"));
 const PortfolioPreview = lazy(() =>
   import("../portfolioPreview/PortfolioPreview")
@@ -209,6 +210,13 @@ const Dashboard = () => {
             </div>
           }
         >
+          {state.templete ||
+          state.yourDetails ||
+          state.liveProject ||
+          state.setting ||
+          state.help ? null : (
+            <Welcome />
+          )}
           {state.templete ? <PortfolioGallery /> : null}
           {state.yourDetails ? <UserDetails /> : null}
           {state.liveProject ? <PortfolioPreview /> : null}

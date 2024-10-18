@@ -10,13 +10,25 @@ const initialState = {
   status: "idle",
   error: null,
 };
-const baseUrl = "https://profolioelite-backend-1.onrender.com";
+// const baseUrl = "https://profolioelite-backend-1.onrender.com";
+const baseUrl ="http://localhost:5000"
 
 // Async thunk for user registration
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (userData) => {
     const response = await axios.post(`${baseUrl}/api/auth/register`, userData);
+    return response.data;
+  }
+);
+
+export const updateTemplateUser = createAsyncThunk(
+  "user/templateUser",
+  async (templateName) => {
+    const response = await axios.post(
+      `${baseUrl}/api/auth/template`,
+      templateName
+    );
     return response.data;
   }
 );
@@ -184,11 +196,24 @@ const userSlice = createSlice({
       .addCase(getuserdetails.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(updateTemplateUser.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(updateTemplateUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+        localStorage.setItem("getUserDetails", action.payload);
+      })
+      .addCase(updateTemplateUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
 
-export const { logout, setProfession, inputUserDetialsInForm, } =
+export const { logout, setProfession, inputUserDetialsInForm } =
   userSlice.actions;
 
 export default userSlice.reducer;
