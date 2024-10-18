@@ -10,8 +10,9 @@ const initialState = {
   status: "idle",
   error: null,
 };
-// const baseUrl = "https://profolioelite-backend-1.onrender.com";
-const baseUrl ="http://localhost:5000"
+const baseUrl = "https://profolioelite-backend-1.onrender.com";
+const token = localStorage.getItem("token");
+// const baseUrl ="http://localhost:5000"
 
 // Async thunk for user registration
 export const registerUser = createAsyncThunk(
@@ -25,9 +26,16 @@ export const registerUser = createAsyncThunk(
 export const updateTemplateUser = createAsyncThunk(
   "user/templateUser",
   async (templateName) => {
+    console.log(token);
+
+    console.log(templateName);
+
     const response = await axios.post(
       `${baseUrl}/api/auth/template`,
-      templateName
+      { templateName }, // Passing data in the body
+      {
+        headers: { "x-auth-token": token }, // Setting the headers
+      }
     );
     return response.data;
   }
