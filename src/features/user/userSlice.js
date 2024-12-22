@@ -10,13 +10,37 @@ const initialState = {
   status: "idle",
   error: null,
 };
-const baseUrl = "https://profolioelite-backend-1.onrender.com";
+const baseUrl = "http://localhost:5000";
+
+// const baseUrl = "https://profolioelite-backend-1.onrender.com";
+const token = localStorage.getItem("token");
+const initialInputUserDetails = localStorage.getItem("userDetails");
+const changingIntoObject = JSON.parse(initialInputUserDetails);
+// console.log(changingIntoObject._id);
+// console.log(changingIntoObject);
+const _id = changingIntoObject?._id;
 
 // Async thunk for user registration
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (userData) => {
     const response = await axios.post(`${baseUrl}/api/auth/register`, userData);
+    return response.data;
+  }
+);
+export const updateTemplateUser = createAsyncThunk(
+  "user/templateUser",
+  async ({ templateName, token, _id }) => {
+    // Ensure _id is included in the destructured parameters
+    console.log(token);
+
+    const response = await axios.post(
+      `${baseUrl}/api/auth/template`,
+      { templateName, _id }, // Combine templateName and _id into a single object
+      {
+        headers: { "x-auth-token": token }, // Setting the headers
+      }
+    );
     return response.data;
   }
 );
@@ -140,6 +164,9 @@ const userSlice = createSlice({
         state.user = action.payload;
         const userData = JSON.stringify(action.payload);
         localStorage.setItem("userDetails", userData);
+        if (updateTemplateUser) {
+          localStorage.setItem("userDetails", userData);
+        }
       })
       .addCase(getUser.rejected, (state, action) => {
         state.status = "failed";
@@ -184,11 +211,24 @@ const userSlice = createSlice({
       .addCase(getuserdetails.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(updateTemplateUser.pending, (state) => {
+        state.status = "loading";
+      })
+
+      .addCase(updateTemplateUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.user = action.payload;
+        localStorage.setItem("getUserDetails", action.payload);
+      })
+      .addCase(updateTemplateUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
 
-export const { logout, setProfession, inputUserDetialsInForm, } =
+export const { logout, setProfession, inputUserDetialsInForm } =
   userSlice.actions;
 
 export default userSlice.reducer;

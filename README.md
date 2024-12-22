@@ -7,6 +7,8 @@ Welcome to the ProFolioElite frontend repository! This is the official frontend 
 
 ProFolioElite offers top-tier solutions for building and managing your professional portfolio. Our platform provides a user-friendly interface and a variety of customization options to help you highlight your skills, projects, and achievements in the most compelling way possible.
 
+![Project Demo](./src/assets/demo.gif)
+
 ## Features
 
 - **Responsive Design**: Your portfolio will look great on any device, ensuring a seamless experience for your audience.

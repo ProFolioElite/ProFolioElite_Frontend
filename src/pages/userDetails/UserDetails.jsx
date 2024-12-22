@@ -5,21 +5,27 @@ import { userDetails } from "../../features/user/userSlice";
 
 const UserDetails = () => {
   const token = localStorage.getItem("token");
+  const userSaveDetails = localStorage.getItem("getUserDetails");
+
   const dispatch = useDispatch();
   const inputuserDetails = useSelector(
     (state) => state.user.inputUserDetialsInForm
   );
   console.log(JSON.stringify(inputuserDetails));
   console.log(token);
+  console.log(userSaveDetails);
+
   const formInputDetails = inputuserDetails;
-//   const formInputDetails = JSON.stringify(inputuserDetails);
+  //   const formInputDetails = JSON.stringify(inputuserDetails);
 
   useEffect(() => {
     if (token && formInputDetails) {
       //   const parsedUserDetails = JSON.parse(inputuserDetails);
       console.log(formInputDetails);
-      
-      dispatch(userDetails({token:token, inputuserDetails:formInputDetails}));
+
+      dispatch(
+        userDetails({ token: token, inputuserDetails: formInputDetails })
+      );
     }
   }, [token, formInputDetails]);
 

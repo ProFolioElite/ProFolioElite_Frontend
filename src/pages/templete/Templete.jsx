@@ -1,12 +1,18 @@
 // src/components/TemplatePage.js
 
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 // import { fetchTemplates } from '../../features/user/userSlice';
 
 const TemplatePage = () => {
   const dispatch = useDispatch();
-  const { profession, templates, status, error } = useSelector((state) => state.user);
+  const selectedTemplate = localStorage.getItem("userDetails");
+  console.log(selectedTemplate);
+
+  const { profession, templates, status, error } = useSelector(
+    (state) => state.user
+  );
+  console.log(templates);
 
   useEffect(() => {
     if (profession) {
@@ -19,9 +25,9 @@ const TemplatePage = () => {
       <h2 className="text-4xl font-bold text-center mb-8">
         Templates for {profession}
       </h2>
-      {status === 'loading' && <p>Loading templates...</p>}
-      {status === 'failed' && <p>Error: {error}</p>}
-      {status === 'succeeded' && (
+      {status === "loading" && <p>Loading templates...</p>}
+      {status === "failed" && <p>Error: {error}</p>}
+      {status === "succeeded" && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {templates.map((template, index) => (
             <div
