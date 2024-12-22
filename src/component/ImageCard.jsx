@@ -1,49 +1,77 @@
 import { FaEye } from "react-icons/fa";
 import { Link } from "react-router-dom";
 // import
-import { BiCheckbox, BiSave } from "react-icons/bi";
+import { BiCheckbox, BiCheckSquare, BiSave, BiSelection } from "react-icons/bi";
 import { FiSave } from "react-icons/fi";
 import { updateTemplateUser } from "../features/user/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
-const ImageCard = ({ imageUrl, title, priview }) => {
+const ImageCard = ({ imageUrl, title, priview, highLight }) => {
+  const user = useSelector((state) => state.user);
+  const [currentToken, setToken] = useState();
+
   const dispatch = useDispatch();
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
+  const { _id } = user?.user || {};
+  // Destructure token directly from user state
+  console.log(_id);
+  console.log(token);
 
+  useEffect(() => {
+    setToken(token);
+  }, [token]);
 
-  const handleOnSelcet = (title) => {
-    dispatch(updateTemplateUser(title,token));
-    console.log(token);
-    
-    console.log(title);
+  const handleOnSelect = (templateName) => {
+    dispatch(updateTemplateUser({ templateName, token: currentToken, _id }));
+
+    console.log(currentToken);
+    console.log(templateName);
   };
-  console.log(token)
+
+  console.log(token);
   // const userDetails = useSelector((state) => state.user);
   return (
     <div
-      onClick={() => {
-        handleOnSelcet(title);
-      }}
-      className="transform transition-transform duration-300 hover:scale-105"
+      className={`transform transition-transform duration-300 hover:scale-105 `}
     >
-      <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+      <div
+        className={`bg-gray-800 rounded-lg overflow-hidden shadow-lg ${
+          highLight ? `border-2 border-green-400 rounded-lg` : null
+        }`}
+      >
         <img
           src={imageUrl}
           alt={title}
           className="w-full h-48 object-cover transition-transform duration-300"
         />
         <div className="p-4 flex justify-between align-middle">
-          <h2 className="text-lg font-bold text-white">{title}</h2>
-          <span className="flex pt-2 -mr-7">
-            <Link to={priview ? priview : null}>
-              <FaEye />
-            </Link>
-          </span>
-          <span className="flex pt-2">
-            {/* <Link to={priview ? priview : null}> */}
-            <BiCheckbox alt="Slect the template" />
-            {/* </Link> */}
-          </span>
+          <div>
+            <h2 className="text-lg font-bold text-white">{title}</h2>
+          </div>
+          <div className="flex gap-10">
+            <span className="flex pt-2 -mr-7">
+              <Link to={priview ? priview : null}>
+                <FaEye />
+              </Link>
+            </span>
+            <span className="flex pt-2">
+              {highLight ? (
+                <Link>
+                  <BiCheckSquare />
+                </Link>
+              ) : (
+                <Link>
+                  <BiCheckbox
+                    onClick={() => {
+                      handleOnSelect(title);
+                    }}
+                    alt="Select the template"
+                  />
+                </Link>
+              )}
+            </span>
+          </div>
         </div>
       </div>
     </div>

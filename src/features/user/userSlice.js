@@ -10,9 +10,15 @@ const initialState = {
   status: "idle",
   error: null,
 };
-const baseUrl = "https://profolioelite-backend-1.onrender.com";
+const baseUrl = "http://localhost:5000";
+
+// const baseUrl = "https://profolioelite-backend-1.onrender.com";
 const token = localStorage.getItem("token");
-// const baseUrl ="http://localhost:5000"
+const initialInputUserDetails = localStorage.getItem("userDetails");
+const changingIntoObject = JSON.parse(initialInputUserDetails);
+// console.log(changingIntoObject._id);
+// console.log(changingIntoObject);
+const _id = changingIntoObject?._id;
 
 // Async thunk for user registration
 export const registerUser = createAsyncThunk(
@@ -22,17 +28,15 @@ export const registerUser = createAsyncThunk(
     return response.data;
   }
 );
-
 export const updateTemplateUser = createAsyncThunk(
   "user/templateUser",
-  async (templateName) => {
+  async ({ templateName, token, _id }) => {
+    // Ensure _id is included in the destructured parameters
     console.log(token);
-
-    console.log(templateName);
 
     const response = await axios.post(
       `${baseUrl}/api/auth/template`,
-      { templateName }, // Passing data in the body
+      { templateName, _id }, // Combine templateName and _id into a single object
       {
         headers: { "x-auth-token": token }, // Setting the headers
       }
@@ -160,6 +164,9 @@ const userSlice = createSlice({
         state.user = action.payload;
         const userData = JSON.stringify(action.payload);
         localStorage.setItem("userDetails", userData);
+        if (updateTemplateUser) {
+          localStorage.setItem("userDetails", userData);
+        }
       })
       .addCase(getUser.rejected, (state, action) => {
         state.status = "failed";
