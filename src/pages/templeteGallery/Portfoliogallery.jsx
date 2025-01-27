@@ -7,17 +7,41 @@ import AvantGarde from "../../assets/temp6.png";
 import Trailblazer from "../../assets/temp7.png";
 import Challenger from "../../assets/snip4.png";
 import { useEffect, useState } from "react";
+import Spinner from "../../component/Spinner";
+import SuccessModal from "../../component/SuccessModal";
+import { useSelector } from "react-redux";
 
 const PortfolioGallery = () => {
   const [selectedTempleate, setSlectedTemplate] = useState("");
-  const userSelectedImage = localStorage.getItem("userDetails");
-  const userSelectedTemplate = JSON.parse(userSelectedImage);
-  console.log(userSelectedTemplate);
-  
+  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const user = useSelector((state) => state.user);
+
+  const { email } = user?.user || {};
+  const handleOnClose = () => {
+    setShowModal(!showModal);
+  };
+
   useEffect(() => {
-    setSlectedTemplate(userSelectedTemplate.template);
-  }, [userSelectedTemplate]);
-  console.log(selectedTempleate);
+    // Fetch user data with the token
+
+    if (!user?.template) {
+      setSlectedTemplate(user?.user?.template);
+    }
+    if (user?.template) {
+      setSlectedTemplate(user?.template?.data?.template);
+      setShowModal(true);
+    }
+    setInterval(() => {
+      setLoading(false);
+    }, 2000);
+  }, [user, loading]);
+
+  const handleOnSelect = () => {
+    setLoading(true);
+  };
+
+  // useEffect(() => {});
 
   const projects = [
     {
@@ -89,15 +113,30 @@ const PortfolioGallery = () => {
         scrollbarWidth: "none" /* For Firefox */,
       }}
     >
-      {projects.map((project) => (
-        <ImageCard
-          key={project.id ? project.id : null}
-          imageUrl={project.imageUrl ? project.imageUrl : null}
-          title={project.title ? project.title : null}
-          priview={project.priview ? project.priview : null}
-          highLight={project.highlight}
-        />
-      ))}
+      {loading ? (
+        <Spinner lg={true} full={true} />
+      ) : (
+        <>
+          {projects.map((project) => (
+            <ImageCard
+              key={project.id ? project.id : null}
+              imageUrl={project.imageUrl ? project.imageUrl : null}
+              title={project.title ? project.title : null}
+              priview={project.priview ? project.priview : null}
+              highLight={project.highlight ? project.highlight : null}
+              email={email ? email : null}
+              OnSelect={handleOnSelect}
+            />
+          ))}
+          {showModal ? (
+            <SuccessModal
+              show={showModal}
+              message={"Your Template changed Sucessfull"}
+              onClose={handleOnClose}
+            />
+          ) : null}
+        </>
+      )}
     </section>
   );
 };

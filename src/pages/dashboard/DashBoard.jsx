@@ -12,6 +12,7 @@ import {
 import { FaCog, FaQuestionCircle } from "react-icons/fa";
 import Spinner from "../../component/Spinner";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const PortfolioGallery = lazy(() =>
   import("../templeteGallery/Portfoliogallery")
@@ -83,9 +84,8 @@ const handleToNavigate = (state, action) => {
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [state, dispatch] = useReducer(handleToNavigate, initialState);
-  const token = localStorage.getItem("userDetails");
-  const data = JSON.parse(token);
-
+  const user = useSelector((state) => state.user);
+  const token = localStorage.getItem("token")
   const navigation = useNavigate();
 
   const toggleSidebar = () => {
@@ -98,6 +98,10 @@ const Dashboard = () => {
     localStorage.setItem("token", "");
     navigation("/signin");
   };
+  if(!token){
+    navigation('/signin')
+  }
+
 
   return (
     <div className="flex h-screen bg-gradient-to-b from-black via-black to-gray-900">
@@ -178,8 +182,10 @@ const Dashboard = () => {
             }`}
           >
             <div className="text-white">
-              <h2 className="text-lg font-bold">{data?.name.toUpperCase()}</h2>
-              <p className="text-sm">{data?.profession}</p>
+              <h2 className="text-lg font-bold">
+                {user?.user?.name.toUpperCase()}
+              </h2>
+              <p className="text-sm">{user?.user?.profession}</p>
             </div>
             <div className="text-white pt-2 mr-3 flex justify-around">
               <FaSignOutAlt onClick={handleToLogout} size={"30px"} />{" "}
@@ -206,7 +212,7 @@ const Dashboard = () => {
         <Suspense
           fallback={
             <div>
-              <Spinner />
+              <Spinner lg={true} full={true} />
             </div>
           }
         >

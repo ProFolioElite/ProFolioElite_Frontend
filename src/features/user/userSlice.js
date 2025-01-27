@@ -13,12 +13,12 @@ const initialState = {
 const baseUrl = "http://localhost:5000";
 
 // const baseUrl = "https://profolioelite-backend-1.onrender.com";
-const token = localStorage.getItem("token");
-const initialInputUserDetails = localStorage.getItem("userDetails");
-const changingIntoObject = JSON.parse(initialInputUserDetails);
+// const token = localStorage.getItem("token");
+// const initialInputUserDetails = localStorage.getItem("userDetails");
+// const changingIntoObject = JSON.parse(initialInputUserDetails);
 // console.log(changingIntoObject._id);
 // console.log(changingIntoObject);
-const _id = changingIntoObject?._id;
+// const _id = changingIntoObject?._id;
 
 // Async thunk for user registration
 export const registerUser = createAsyncThunk(
@@ -30,13 +30,13 @@ export const registerUser = createAsyncThunk(
 );
 export const updateTemplateUser = createAsyncThunk(
   "user/templateUser",
-  async ({ templateName, token, _id }) => {
+  async ({ templateName, token, _id, email }) => {
     // Ensure _id is included in the destructured parameters
     console.log(token);
 
     const response = await axios.post(
       `${baseUrl}/api/auth/template`,
-      { templateName, _id }, // Combine templateName and _id into a single object
+      { templateName, _id, email }, // Combine templateName and _id into a single object
       {
         headers: { "x-auth-token": token }, // Setting the headers
       }
@@ -70,18 +70,23 @@ export const getUser = createAsyncThunk("user/getUser", async (token) => {
 export const getuserdetails = createAsyncThunk(
   "user/getuserdetails",
   async ({ token, email }) => {
-    console.log(token);
+    try {
+      console.log(token);
 
-    const response = await axios.post(
-      `${baseUrl}/api/getuserdetails`,
-      {
-        headers: { "x-auth-token": token }, // Changed 'header' to 'headers'
-      },
-      email
-    );
+      const response = await axios.post(
+        `${baseUrl}/api/getuserdetails`,
+        { email }, // Pass email as part of the request body
+        {
+          headers: { "x-auth-token": token }, // Properly set headers here
+        }
+      );
 
-    console.log(response);
-    return response.data;
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching user details:", error.message);
+      throw error; // Propagate the error for further handling
+    }
   }
 );
 
@@ -95,24 +100,24 @@ export const logOut = createAsyncThunk("user/logout", async () => {
 
 export const userDetails = createAsyncThunk(
   "user/userDetails",
-  async ({ token, inputuserDetails }) => {
-    console.log(inputuserDetails);
-    console.log(token);
-
-    const response = await axios.post(
-      `${baseUrl}/api/userDetails`,
-      inputuserDetails,
-      {
-        headers: { "x-auth-token": token },
-        // Changed 'header' to 'headers'
-      }
-    );
-
-    console.log(response);
-    return response.data;
+  async ({ token, inputuserDetails }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        `${baseUrl}/api/userDetails`,
+        inputuserDetails, // FormData object
+        {
+          headers: {
+            "x-auth-token": token,
+            "Content-Type": "multipart/form-data", // Let Axios set boundary automatically
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error");
+    }
   }
 );
-
 // User slice
 const userSlice = createSlice({
   name: "user",
@@ -205,7 +210,7 @@ const userSlice = createSlice({
 
       .addCase(getuserdetails.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
+        state.getUserInfo = action.payload;
         localStorage.setItem("getUserDetails", action.payload);
       })
       .addCase(getuserdetails.rejected, (state, action) => {
@@ -218,8 +223,8 @@ const userSlice = createSlice({
 
       .addCase(updateTemplateUser.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.user = action.payload;
-        localStorage.setItem("getUserDetails", action.payload);
+        state.template = action.payload;
+        localStorage.setItem("getTemplate", action.payload.data);
       })
       .addCase(updateTemplateUser.rejected, (state, action) => {
         state.status = "failed";

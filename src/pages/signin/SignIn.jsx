@@ -15,8 +15,9 @@ const SignInPage = () => {
   // const userDetails = useSelector((state) => state.user);
 
   const { token } = user?.user || {}; // Destructure token directly from user state
-  const { _id } = user?.user || {}; // Destructure token directly from user state
-  const handleChange = (e) => {
+  const { _id } = user?.user || {};
+  // console.log(token); // Destructure token directly from user state
+  const handleChange = (e) => { 
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -28,7 +29,6 @@ const SignInPage = () => {
 
   // Use useEffect to navigate when the token is available
   useEffect(() => {
-
     if (token) {
       // Fetch user data with the token
       dispatch(getUser(token));
@@ -85,7 +85,7 @@ const SignInPage = () => {
             type="submit"
             className="w-full px-4 py-2 font-bold text-black bg-purple-500 rounded-lg hover:bg-purple-600"
           >
-            {loading?<Spinner/>:`Sign In`}
+            {loading ? <Spinner xm={true} /> : `Sign In`}
           </button>
         </form>
         <p className="mt-4">
