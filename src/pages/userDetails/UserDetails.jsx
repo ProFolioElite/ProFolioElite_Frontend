@@ -1,37 +1,25 @@
 import { useEffect } from "react";
 import MultiStepForm from "../../component/MultiStepForm";
 import { useDispatch, useSelector } from "react-redux";
-import { userDetails } from "../../features/user/userSlice";
+import { getuserdetails,userDetails } from "../../features/user/userSlice";
+
 
 const UserDetails = () => {
+  const user = useSelector((state) => state.user);
   const token = localStorage.getItem("token");
-  const userSaveDetails = localStorage.getItem("getUserDetails");
-
   const dispatch = useDispatch();
-  const inputuserDetails = useSelector(
-    (state) => state.user.inputUserDetialsInForm
-  );
-  console.log(JSON.stringify(inputuserDetails));
-  console.log(token);
-  console.log(userSaveDetails);
-
-  const formInputDetails = inputuserDetails;
-  //   const formInputDetails = JSON.stringify(inputuserDetails);
-
+  console.log(user?.getUserInfo?.data);
   useEffect(() => {
-    if (token && formInputDetails) {
-      //   const parsedUserDetails = JSON.parse(inputuserDetails);
-      console.log(formInputDetails);
-
-      dispatch(
-        userDetails({ token: token, inputuserDetails: formInputDetails })
-      );
-    }
-  }, [token, formInputDetails]);
+    const email = user?.user?.email;
+    dispatch(getuserdetails({ token, email }));
+  }, [user?.user?.email, dispatch, token]);
 
   return (
     <div>
-      <MultiStepForm />
+      <MultiStepForm
+        storeData={user?.getUserInfo?.data ? user?.getUserInfo?.data : null}
+        postMethod={userDetails}
+      />
     </div>
   );
 };

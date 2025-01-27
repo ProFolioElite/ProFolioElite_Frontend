@@ -7,23 +7,31 @@ import { updateTemplateUser } from "../features/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-const ImageCard = ({ imageUrl, title, priview, highLight }) => {
+const ImageCard = ({
+  imageUrl,
+  title,
+  priview,
+  highLight,
+  email,
+  OnSelect,
+}) => {
   const user = useSelector((state) => state.user);
   const [currentToken, setToken] = useState();
 
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
-  const { _id } = user?.user || {};
+
+  const _id = user?.user?.data?._id || {};
   // Destructure token directly from user state
-  console.log(_id);
-  console.log(token);
 
   useEffect(() => {
     setToken(token);
   }, [token]);
 
-  const handleOnSelect = (templateName) => {
-    dispatch(updateTemplateUser({ templateName, token: currentToken, _id }));
+  const handleOnSelect = (templateName, email) => {
+    dispatch(
+      updateTemplateUser({ templateName, token: currentToken, _id, email })
+    );
 
     console.log(currentToken);
     console.log(templateName);
@@ -37,7 +45,7 @@ const ImageCard = ({ imageUrl, title, priview, highLight }) => {
     >
       <div
         className={`bg-gray-800 rounded-lg overflow-hidden shadow-lg ${
-          highLight ? `border-2 border-green-400 rounded-lg` : null
+          highLight ? `border-4 border-purple-500 rounded-lg` : null
         }`}
       >
         <img
@@ -64,7 +72,7 @@ const ImageCard = ({ imageUrl, title, priview, highLight }) => {
                 <Link>
                   <BiCheckbox
                     onClick={() => {
-                      handleOnSelect(title);
+                      handleOnSelect(title, email), OnSelect();
                     }}
                     alt="Select the template"
                   />

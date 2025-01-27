@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaUser,
   FaBriefcase,
@@ -6,11 +6,24 @@ import {
   FaProjectDiagram,
   FaLink,
 } from "react-icons/fa";
-import {  useDispatch } from "react-redux";
-import { inputUserDetialsInForm } from "../features/user/userSlice";
-const MultiStepForm = () => {
+import { useDispatch, useSelector } from "react-redux";
+// import { inputUserDetialsInForm } from "../features/user/userSlice";
+import store from "../store/Store";
+import {
+  inputUserDetialsInForm,
+  userDetails,
+} from "../features/user/userSlice";
+// import { useSelect } from "@react-three/drei";
+const MultiStepForm = ({ storeData }) => {
+  // const userloginData = localStorage.getItem("userDetails");
+  // console.log(userloginData);
+  const user = useSelector((state) => state.user);
+  const token = localStorage.getItem("token");
+  console.log(user);
+  // console.log(pos);
+
   const [formData, setFormData] = useState({
-    profilePhoto: "",
+    profilePhoto: null,
     name: "",
     email: "",
     phone: "",
@@ -54,6 +67,11 @@ const MultiStepForm = () => {
 
   const [currentStep, setCurrentStep] = useState(0);
   const dispatch = useDispatch();
+  // useEffect(() => {
+  //   if (user?.user?.name && user?.user?.email) {
+  //     setFormData(...FormData);
+  //   }
+  // }, []);
 
   const steps = [
     { label: "Personal Details", icon: <FaUser /> },
@@ -65,6 +83,10 @@ const MultiStepForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "skills") {
+      const skillsArray = value.split(",").map((skill) => skill.trim());
+      setFormData({ ...formData, [name]: skillsArray });
+    }
     setFormData({ ...formData, [name]: value });
   };
 
@@ -143,16 +165,43 @@ const MultiStepForm = () => {
       ],
     });
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(formData);
-    // localStorage.setItem("intputUserDetials", formData);
-    dispatch(inputUserDetialsInForm(formData));
 
-    // Handle form submission here
+    const formDataToSend = new FormData();
+
+    // Append profile photo (file)
+    if (formData.profilePhoto) {
+      formDataToSend.append("profilePhoto", formData.profilePhoto);
+    }
+
+    // Append other fields
+    formDataToSend.append("name", formData.name);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("phone", formData.phone);
+    formDataToSend.append("about", formData.about);
+    formDataToSend.append("profession", formData.profession);
+    formDataToSend.append("skills", formData.skills.join(",")); // Convert array to string
+    formDataToSend.append("experienceLevel", formData.experienceLevel);
+
+    // Stringify arrays/objects
+    formDataToSend.append(
+      "workExperience",
+      JSON.stringify(formData.workExperience)
+    );
+    formDataToSend.append(
+      "openSourceContribution",
+      JSON.stringify(formData.openSourceContribution)
+    );
+    formDataToSend.append("projects", JSON.stringify(formData.projects));
+    formDataToSend.append(
+      "socialMediaLinks",
+      JSON.stringify(formData.socialMediaLinks)
+    );
+
+    // Dispatch action with FormData
+    dispatch(userDetails({ token, inputuserDetails: formDataToSend }));
   };
-
   const nextStep = () => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
@@ -191,7 +240,12 @@ const MultiStepForm = () => {
             ))}
           </div>
 
-          <form onSubmit={handleSubmit} className="p-5">
+          <form
+            onSubmit={(e) => {
+              handleSubmit(e, formData);
+            }}
+            className="p-5"
+          >
             {currentStep === 0 && (
               <div className="mb-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -200,6 +254,9 @@ const MultiStepForm = () => {
                     <input
                       type="file"
                       name="profilePhoto"
+                      value={
+                        storeData?.profilePhoto ? formData.profilePhoto : null
+                      }
                       onChange={handleFileChange}
                       className="w-full p-1  border-gray-600 h-10 rounded bg-gray-700 text-white "
                     />
@@ -210,9 +267,10 @@ const MultiStepForm = () => {
                     <input
                       type="text"
                       name="name"
-                      value={formData.name}
+                      value={storeData ? storeData?.name : formData.name}
                       onChange={handleChange}
                       className="w-full p-2 border rounded text-black"
+                      // disabled
                     />
                   </div>
                   <div>
@@ -220,9 +278,10 @@ const MultiStepForm = () => {
                     <input
                       type="email"
                       name="email"
-                      value={formData.email}
+                      value={storeData ? storeData?.email : formData.email}
                       onChange={handleChange}
                       className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                      // disabled
                     />
                   </div>
                   <div>
@@ -230,9 +289,10 @@ const MultiStepForm = () => {
                     <input
                       type="tel"
                       name="phone"
-                      value={formData.phone}
+                      value={storeData ? storeData?.phone : formData.phone}
                       onChange={handleChange}
                       className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                      disabled={storeData ? true : false}
                     />
                   </div>
                   <div>
@@ -240,7 +300,11 @@ const MultiStepForm = () => {
                     <input
                       type="text"
                       name="experienceLevel"
-                      value={formData.experienceLevel}
+                      value={
+                        storeData
+                          ? storeData?.experienceLevel
+                          : formData.experienceLevel
+                      }
                       onChange={handleChange}
                       className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
                     />
@@ -251,18 +315,20 @@ const MultiStepForm = () => {
                   <label className="block mb-2">About Yourself</label>
                   <textarea
                     name="about"
-                    value={formData.about}
+                    value={storeData ? storeData?.about : formData.about}
                     onChange={handleChange}
                     className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                    disabled={storeData ? true : false}
                   />
                 </div>
                 <div className="mb-4">
                   <label className="block mb-2">Skills</label>
                   <textarea
                     name="skills"
-                    value={formData.skills} // Join skills for display
+                    value={storeData ? storeData?.skills : formData.skills} // Join skills for display
                     onChange={handleChange}
                     className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                    disabled={storeData ? true : false}
                   />
                 </div>
               </div>
@@ -270,79 +336,182 @@ const MultiStepForm = () => {
             {currentStep === 1 && (
               <div className="mb-4">
                 {/* <h3 className="text-xl font-bold mb-2">Work Experience</h3> */}
-                {formData.workExperience.map((work, index) => (
-                  <div
-                    key={index}
-                    className="mb-4 border p-4 rounded bg-gray-800"
+                {storeData?.workExperience
+                  ? storeData?.workExperience.map((work, index) => (
+                      <div
+                        key={index}
+                        className="mb-4 border p-4 rounded bg-gray-800"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block mb-2">Company Name</label>
+                            <input
+                              type="text"
+                              name="companyName"
+                              value={work.companyName}
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              disabled
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Designation</label>
+                            <input
+                              type="text"
+                              name="designation"
+                              value={work.designation}
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              disabled
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">
+                              Project Worked On
+                            </label>
+                            <input
+                              type="text"
+                              name="projectWorkedOn"
+                              value={work.projectWorkedOn}
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              disabled
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Project Brief</label>
+                            <textarea
+                              name="projectBrief"
+                              value={work.projectBrief}
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              disabled
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Contribution</label>
+                            <textarea
+                              name="contribution"
+                              value={work.contribution}
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              disabled
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Document</label>
+                            <input
+                              type="file"
+                              name="document"
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              disabled
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  : formData.workExperience.map((work, index) => (
+                      <div
+                        key={index}
+                        className="mb-4 border p-4 rounded bg-gray-800"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block mb-2">Company Name</label>
+                            <input
+                              type="text"
+                              name="companyName"
+                              value={work.companyName}
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Designation</label>
+                            <input
+                              type="text"
+                              name="designation"
+                              value={work.designation}
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">
+                              Project Worked On
+                            </label>
+                            <input
+                              type="text"
+                              name="projectWorkedOn"
+                              value={work.projectWorkedOn}
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Project Brief</label>
+                            <textarea
+                              name="projectBrief"
+                              value={work.projectBrief}
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Contribution</label>
+                            <textarea
+                              name="contribution"
+                              value={work.contribution}
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Document</label>
+                            <input
+                              type="file"
+                              name="document"
+                              onChange={(e) =>
+                                handleWorkExperienceChange(index, e)
+                              }
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                {storeData?.workExperience ? null : (
+                  <button
+                    type="button"
+                    onClick={addWorkExperience}
+                    className="bg-purple-600 text-white py-2 px-4 rounded"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block mb-2">Company Name</label>
-                        <input
-                          type="text"
-                          name="companyName"
-                          value={work.companyName}
-                          onChange={(e) => handleWorkExperienceChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-2">Designation</label>
-                        <input
-                          type="text"
-                          name="designation"
-                          value={work.designation}
-                          onChange={(e) => handleWorkExperienceChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-2">Project Worked On</label>
-                        <input
-                          type="text"
-                          name="projectWorkedOn"
-                          value={work.projectWorkedOn}
-                          onChange={(e) => handleWorkExperienceChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-2">Project Brief</label>
-                        <textarea
-                          name="projectBrief"
-                          value={work.projectBrief}
-                          onChange={(e) => handleWorkExperienceChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-2">Contribution</label>
-                        <textarea
-                          name="contribution"
-                          value={work.contribution}
-                          onChange={(e) => handleWorkExperienceChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-2">Document</label>
-                        <input
-                          type="file"
-                          name="document"
-                          onChange={(e) => handleWorkExperienceChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={addWorkExperience}
-                  className="bg-purple-600 text-white py-2 px-4 rounded"
-                >
-                  Add Work Experience
-                </button>
+                    Add Work Experience
+                  </button>
+                )}
               </div>
             )}
             {currentStep === 2 && (
@@ -350,111 +519,232 @@ const MultiStepForm = () => {
                 {/* <h3 className="text-xl font-bold mb-2">
                 Open Source Contributions
               </h3> */}
-                {formData.openSourceContribution.map((contribution, index) => (
-                  <div
-                    key={index}
-                    className="mb-4 border p-4 rounded bg-gray-800"
+                {storeData?.openSourceContribution
+                  ? storeData?.openSourceContribution.map(
+                      (contribution, index) => (
+                        <div
+                          key={index}
+                          className="mb-4 border p-4 rounded bg-gray-800"
+                        >
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block mb-2">Description</label>
+                              <textarea
+                                name="description"
+                                value={contribution.description}
+                                onChange={(e) =>
+                                  handleOpenSourceChange(index, e)
+                                }
+                                disabled
+                                className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                              />
+                            </div>
+                            <div>
+                              <label className="block mb-2">Skill Set</label>
+                              <input
+                                type="text"
+                                name="skillSet"
+                                value={contribution.skillSet}
+                                onChange={(e) =>
+                                  handleOpenSourceChange(index, e)
+                                }
+                                disabled
+                                className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
+                              />
+                            </div>
+                            <div>
+                              <label className="block mb-2">Link</label>
+                              <input
+                                type="url"
+                                name="link"
+                                value={contribution.link}
+                                onChange={(e) =>
+                                  handleOpenSourceChange(index, e)
+                                }
+                                disabled
+                                className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    )
+                  : formData.openSourceContribution.map(
+                      (contribution, index) => (
+                        <div
+                          key={index}
+                          className="mb-4 border p-4 rounded bg-gray-800"
+                        >
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <label className="block mb-2">Description</label>
+                              <textarea
+                                name="description"
+                                value={contribution.description}
+                                onChange={(e) =>
+                                  handleOpenSourceChange(index, e)
+                                }
+                                className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                              />
+                            </div>
+                            <div>
+                              <label className="block mb-2">Skill Set</label>
+                              <input
+                                type="text"
+                                name="skillSet"
+                                value={contribution.skillSet}
+                                onChange={(e) =>
+                                  handleOpenSourceChange(index, e)
+                                }
+                                className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
+                              />
+                            </div>
+                            <div>
+                              <label className="block mb-2">Link</label>
+                              <input
+                                type="url"
+                                name="link"
+                                value={contribution.link}
+                                onChange={(e) =>
+                                  handleOpenSourceChange(index, e)
+                                }
+                                className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    )}
+                {storeData?.openSourceContribution ? null : (
+                  <button
+                    type="button"
+                    onClick={addOpenSourceContribution}
+                    className="mt-2 bg-purple-600 text-white py-2 px-4 rounded"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block mb-2">Description</label>
-                        <textarea
-                          name="description"
-                          value={contribution.description}
-                          onChange={(e) => handleOpenSourceChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-2">Skill Set</label>
-                        <input
-                          type="text"
-                          name="skillSet"
-                          value={contribution.skillSet}
-                          onChange={(e) => handleOpenSourceChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-2">Link</label>
-                        <input
-                          type="url"
-                          name="link"
-                          value={contribution.link}
-                          onChange={(e) => handleOpenSourceChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={addOpenSourceContribution}
-                  className="mt-2 bg-purple-600 text-white py-2 px-4 rounded"
-                >
-                  Add Open Source Contribution
-                </button>
+                    Add Open Source Contribution
+                  </button>
+                )}
               </div>
             )}
             {currentStep === 3 && (
               <div className="mb-4">
                 {/* <h3 className="text-xl font-bold mb-2">Projects</h3> */}
-                {formData.projects.map((project, index) => (
-                  <div
-                    key={index}
-                    className="mb-4 border p-4 rounded bg-gray-800"
+                {storeData?.projects
+                  ? storeData?.projects.map((project, index) => (
+                      <div
+                        key={index}
+                        className="mb-4 border p-4 rounded bg-gray-800"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block mb-2">Description</label>
+                            <textarea
+                              name="description"
+                              value={project.description}
+                              onChange={(e) => handleProjectsChange(index, e)}
+                              disabled
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Skill Set</label>
+                            <input
+                              type="text"
+                              name="skillSet"
+                              value={project.skillSet}
+                              onChange={(e) => handleProjectsChange(index, e)}
+                              disabled
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">
+                              Repository Link
+                            </label>
+                            <input
+                              type="url"
+                              name="repoLink"
+                              value={project.repoLink}
+                              onChange={(e) => handleProjectsChange(index, e)}
+                              disabled
+                              className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Live Link</label>
+                            <input
+                              type="url"
+                              name="liveLink"
+                              value={project.liveLink}
+                              onChange={(e) => handleProjectsChange(index, e)}
+                              disabled
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  : formData.projects.map((project, index) => (
+                      <div
+                        key={index}
+                        className="mb-4 border p-4 rounded bg-gray-800"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block mb-2">Description</label>
+                            <textarea
+                              name="description"
+                              value={project.description}
+                              onChange={(e) => handleProjectsChange(index, e)}
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Skill Set</label>
+                            <input
+                              type="text"
+                              name="skillSet"
+                              value={project.skillSet}
+                              onChange={(e) => handleProjectsChange(index, e)}
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">
+                              Repository Link
+                            </label>
+                            <input
+                              type="url"
+                              name="repoLink"
+                              value={project.repoLink}
+                              onChange={(e) => handleProjectsChange(index, e)}
+                              className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                          <div>
+                            <label className="block mb-2">Live Link</label>
+                            <input
+                              type="url"
+                              name="liveLink"
+                              value={project.liveLink}
+                              onChange={(e) => handleProjectsChange(index, e)}
+                              className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                {storeData?.projects ? null : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      addProject();
+                    }}
+                    className="mt-2 bg-purple-600 text-white py-2 px-4 rounded"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block mb-2">Description</label>
-                        <textarea
-                          name="description"
-                          value={project.description}
-                          onChange={(e) => handleProjectsChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white  mb-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-2">Skill Set</label>
-                        <input
-                          type="text"
-                          name="skillSet"
-                          value={project.skillSet}
-                          onChange={(e) => handleProjectsChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-2">Repository Link</label>
-                        <input
-                          type="url"
-                          name="repoLink"
-                          value={project.repoLink}
-                          onChange={(e) => handleProjectsChange(index, e)}
-                          className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-2">Live Link</label>
-                        <input
-                          type="url"
-                          name="liveLink"
-                          value={project.liveLink}
-                          onChange={(e) => handleProjectsChange(index, e)}
-                          className="w-full p-2  border-gray-600 rounded bg-gray-700 text-white mb-2"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={()=>{addProject()}}
-                  className="mt-2 bg-purple-600 text-white py-2 px-4 rounded"
-                >
-                  Add Project
-                </button>
+                    Add Project
+                  </button>
+                )}
               </div>
             )}
             {currentStep === 4 && (
@@ -466,7 +756,11 @@ const MultiStepForm = () => {
                     <input
                       type="url"
                       name="linkedIn"
-                      value={formData.socialMediaLinks.linkedIn}
+                      value={
+                        storeData?.socialMediaLinks
+                          ? storeData?.socialMediaLinks.linkedIn
+                          : formData.socialMediaLinks.linkedIn
+                      }
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -476,6 +770,7 @@ const MultiStepForm = () => {
                           },
                         })
                       }
+                      disabled={storeData?.socialMediaLinks ? true : false}
                       className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
                     />
                   </div>
@@ -484,7 +779,11 @@ const MultiStepForm = () => {
                     <input
                       type="url"
                       name="instagram"
-                      value={formData.socialMediaLinks.instagram}
+                      value={
+                        storeData?.socialMediaLinks
+                          ? storeData?.socialMediaLinks?.instagram
+                          : formData.socialMediaLinks.instagram
+                      }
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -494,6 +793,7 @@ const MultiStepForm = () => {
                           },
                         })
                       }
+                      disabled={storeData?.socialMediaLinks ? true : false}
                       className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
                     />
                   </div>
@@ -502,7 +802,11 @@ const MultiStepForm = () => {
                     <input
                       type="url"
                       name="leetCode"
-                      value={formData.socialMediaLinks.leetCode}
+                      value={
+                        storeData?.socialMediaLinks
+                          ? storeData?.socialMediaLinks?.leetCode
+                          : formData.socialMediaLinks.leetCode
+                      }
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -512,6 +816,7 @@ const MultiStepForm = () => {
                           },
                         })
                       }
+                      disabled={storeData?.socialMediaLinks ? true : false}
                       className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
                     />
                   </div>
@@ -520,7 +825,11 @@ const MultiStepForm = () => {
                     <input
                       type="url"
                       name="github"
-                      value={formData.socialMediaLinks.github}
+                      value={
+                        storeData?.socialMediaLinks
+                          ? storeData?.socialMediaLinks?.github
+                          : formData.socialMediaLinks.github
+                      }
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -530,6 +839,7 @@ const MultiStepForm = () => {
                           },
                         })
                       }
+                      disabled={storeData?.socialMediaLinks ? true : false}
                       className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
                     />
                   </div>
@@ -538,7 +848,11 @@ const MultiStepForm = () => {
                     <input
                       type="url"
                       name="stackOverflow"
-                      value={formData.socialMediaLinks.stackOverflow}
+                      value={
+                        storeData?.socialMediaLinks
+                          ? storeData?.socialMediaLinks?.stackOverflow
+                          : formData.socialMediaLinks.stackOverflow
+                      }
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -548,6 +862,7 @@ const MultiStepForm = () => {
                           },
                         })
                       }
+                      disabled={storeData?.socialMediaLinks ? true : false}
                       className="w-full p-2 border  border-gray-600 rounded bg-gray-700 text-white mb-2"
                     />
                   </div>
@@ -570,6 +885,13 @@ const MultiStepForm = () => {
                   className="bg-purple-600 text-white py-2 px-4 rounded"
                 >
                   Next
+                </button>
+              ) : storeData ? (
+                <button
+                  type="button"
+                  className="bg-purple-500 text-white py-2 px-4 rounded"
+                >
+                  Edit
                 </button>
               ) : (
                 <button

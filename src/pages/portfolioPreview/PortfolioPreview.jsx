@@ -10,45 +10,98 @@ import Trailblazer from "../../assets/temp7.png";
 import Challenger from "../../assets/snip4.png";
 import { useSelector } from "react-redux";
 
-
-
 const PortfolioPreview = () => {
-  const user = useSelector((state) => state.user);
-  // const { template } = user?.user || {};
-  // const I  = localStorage.getItem('userDetail')
-  const userDetails = localStorage.getItem("userDetails");
-// 
-const initialUserDetails = JSON.parse(userDetails);
-const { template } = initialUserDetails;
-
-  console.log(template);
-
-  const projects = [
-    {
-      id: 1,
-      imageUrl: "https://via.placeholder.com/300", // Replace with your image URL
-      title: "Project 1",
-    },
-  ];
   const [templatePics, setTemplatePics] = useState();
+  const [tittle, setTittle] = useState("");
+
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    if (template === "Visionary") {
-      setTemplatePics(Visionary);
+    if (!user?.template) {
+      switch (user?.user?.template) {
+        case "Avant-Garde":
+          setTemplatePics(AvantGarde);
+          setTittle("Avant-Garde");
+          break;
+
+        case "Visionary":
+          setTemplatePics(Visionary);
+          setTittle("Visionary");
+
+          break;
+        case "Trailblazer":
+          setTemplatePics(Trailblazer);
+          setTittle("Trailblazer");
+
+          break;
+        case "Innovator":
+          setTemplatePics(Innovator);
+          setTittle("Innovator");
+
+          break;
+        case "Catalyst":
+          setTemplatePics(Catalyst);
+          setTittle("Catalyst");
+
+          break;
+        case "Challenger":
+          setTemplatePics(Challenger);
+          setTittle("Challenger");
+
+          break;
+        case "Pioneer":
+          setTemplatePics(Pioneer);
+          setTittle("Pioneer");
+
+          break;
+
+        default:
+          break;
+      }
     }
-    if (template === "Pioneer") {
-      setTemplatePics(Pioneer);
+    if (user?.template) {
+      switch (user?.template?.data?.template) {
+        case "Avant-Garde":
+          setTemplatePics(AvantGarde);
+          setTittle("Avant-Garde");
+          break;
+
+        case "Visionary":
+          setTemplatePics(Visionary);
+          setTittle("Visionary");
+
+          break;
+        case "Trailblazer":
+          setTemplatePics(Trailblazer);
+          setTittle("Trailblazer");
+
+          break;
+        case "Innovator":
+          setTemplatePics(Innovator);
+          setTittle("Innovator");
+
+          break;
+        case "Catalyst":
+          setTemplatePics(Catalyst);
+          setTittle("Catalyst");
+
+          break;
+        case "Challenger":
+          setTemplatePics(Challenger);
+          setTittle("Challenger");
+
+          break;
+        case "Pioneer":
+          setTemplatePics(Pioneer);
+          setTittle("Pioneer");
+
+          break;
+
+        default:
+          break;
+      }
     }
-    if (template === "Catalyst") {
-      setTemplatePics(Catalyst);
-    }
-    if (template === "Innovator") {
-      setTemplatePics(Innovator);
-    }
-    if (template === "AvantGarde") {
-      setTemplatePics(AvantGarde);
-    }
-  }, [template]);
+  }, [user]);
   console.log(templatePics);
 
   return (
@@ -62,7 +115,7 @@ const { template } = initialUserDetails;
       <LivePortFolio
         // key={}
         imageUrl={templatePics}
-        title={template}
+        title={tittle}
       />
       {/* ))} */}
     </section>
